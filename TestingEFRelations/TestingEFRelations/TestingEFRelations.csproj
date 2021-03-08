@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-TestingEFRelations-AEF737F3-2B6A-468E-B290-89A6643B6ED9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20210307073824_test.cs" />
+    <Compile Remove="Data\Migrations\20210307073824_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307074021_test.cs" />
+    <Compile Remove="Data\Migrations\20210307074021_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307074328_test.cs" />
+    <Compile Remove="Data\Migrations\20210307074328_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307080017_test.cs" />
+    <Compile Remove="Data\Migrations\20210307080017_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307080228_test.cs" />
+    <Compile Remove="Data\Migrations\20210307080228_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307080555_test.cs" />
+    <Compile Remove="Data\Migrations\20210307080555_test.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Account\Signup.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_LoginPartial.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
+</Project>

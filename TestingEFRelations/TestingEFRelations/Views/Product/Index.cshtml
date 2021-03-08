@@ -1,0 +1,94 @@
+﻿@model IEnumerable<TestingEFRelations.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Main Menu</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+@*<thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th></th>
+        </tr>
+    </thead>*@
+<div class="row">
+
+    @foreach (var item in Model)
+     {
+
+        <div class="card m-1" style="width: 18rem; ">
+
+            <div class="card-body">
+                <a href="#"><img src="~/Images/PlaceholderImage.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage.ImageName)"></a>
+
+                <a href="#"><p class="card-title text-center text-dark">@Html.DisplayFor(modelItem => item.ProductName)</p></a>
+
+                 <p class="card-text">@Html.DisplayFor(modelItem => item.ProductDescription)</p>
+
+                 <p class="card-text">@Html.DisplayFor(modelItem => item.ProductPrice)$</p>
+
+                 <a href="#" class="btn btn-primary">Add to Cart</a>
+                 <a href="#" class="btn btn-primary">Wishlist</a>
+
+            </div>
+        </div>
+
+     }
+
+</div>
+
+
+@*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductSize)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductSize.SizeName)
+        </td>
+    </tr>*@
+@*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductQuantity)
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductQuantity)
+        </td>
+    </tr>*@
+
+@*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductImage)
+        </th>
+    </tr>*@
+
+@*<td>
+        <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
+    </td>*@
