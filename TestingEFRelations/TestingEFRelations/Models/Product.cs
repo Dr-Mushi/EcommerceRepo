@@ -11,22 +11,31 @@ namespace TestingEFRelations.Models
     {
         public int ProductID { get; set; }
 
-        [Display(Name = "Product Name:")]
+        [Display(Name = "Product Name")]
         public string ProductName { get; set; }
-        [Display(Name = "Description:")]
+        [Display(Name = "Description")]
         public string ProductDescription { get; set; }
-        [Display(Name = "Image:")]
+        [Display(Name = "Image ID")]
         public int ImageID { get; set; }
-        [Display(Name = "Image:")]
+        [Display(Name = "Image")]
         public Image ProductImage { get; set; }
-        [Display(Name = "Size:")]
+        [Display(Name = "Size ID")]
         public int SizeID { get; set; }
-        [Display(Name = "Size:")]
+        [Display(Name = "Size")]
         public Size ProductSize { get; set; }
-        [Display(Name = "Quantity:")]
+        [Display(Name = "Quantity")]
         public int ProductQuantity { get; set; }
-        [Display(Name = "Price:")]
+        [Display(Name = "Price")]
         public double ProductPrice { get; set; }
+
+        public List<Cart> Cart { get; set; }
+
+        [Display(Name = "Small Image")]
+        public List<SmlImage> ProductSmlImage { get; set; }
+
+
+
+
         //[InverseProperty("ProductName")]
         //public List<Wishlist> Wishlist_product_name { get; set; }
 
@@ -38,7 +47,7 @@ namespace TestingEFRelations.Models
 
         //[InverseProperty("ProductPrice")]
         //public List<Wishlist> Wishlist_Product_Price { get; set; }
-       
+
 
         //[InverseProperty("ProductName")]
         //public List<Cart> Product_Name { get; set; }

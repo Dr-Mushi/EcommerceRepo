@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<TestingEFRelations.Models.Product>
 
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Main Menu";
 }
 
 <h1>Main Menu</h1>
@@ -36,26 +37,41 @@
 <div class="row">
 
     @foreach (var item in Model)
-     {
+    {
 
         <div class="card m-1" style="width: 18rem; ">
 
             <div class="card-body">
-                <a href="#"><img src="~/Images/PlaceholderImage.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage.ImageName)"></a>
+                <a asp-action="Details" asp-route-id="@item.ProductID"><img src="~/Images/PlaceholderImage.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage.ImageName)"></a>
 
-                <a href="#"><p class="card-title text-center text-dark">@Html.DisplayFor(modelItem => item.ProductName)</p></a>
+                <a asp-action="Details" asp-route-id="@item.ProductID"><p class="card-title text-center text-dark">@Html.DisplayFor(modelItem => item.ProductName)</p></a>
 
-                 <p class="card-text">@Html.DisplayFor(modelItem => item.ProductDescription)</p>
+                <p class="card-text">@Html.DisplayFor(modelItem => item.ProductDescription)</p>
 
-                 <p class="card-text">@Html.DisplayFor(modelItem => item.ProductPrice)$</p>
+                <p class="card-text">@Html.DisplayFor(modelItem => item.ProductPrice)$</p>
 
-                 <a href="#" class="btn btn-primary">Add to Cart</a>
-                 <a href="#" class="btn btn-primary">Wishlist</a>
+                <a asp-controller="ProductApi" asp-action="@item.ProductID" class="card-text">Click me for API!</a>
+
+
+
+                <div class="row">
+                    <form asp-controller="Cart" asp-action="Create" method="post" class="mr-1">
+                        <input name="ProductID" type="hidden" value="@item.ProductID" />
+                        <input name="CartProductQuantity" type="hidden" value="1" />
+                        <input type="submit" value="Add to Cart" class="btn btn-primary" />
+                    </form>
+
+                    <form asp-controller="Wishlist" asp-action="Create" method="post">
+                        <input name="ProductID" type="hidden" value="@item.ProductID" />
+                        <input name="WishlistProductQuantity" type="hidden" value="1" />
+                        <input type="submit" value="Wishlist" class="btn btn-primary" />
+                    </form>
+                </div>
 
             </div>
         </div>
 
-     }
+    }
 
 </div>
 
@@ -92,3 +108,10 @@
         <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
         <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
     </td>*@
+
+
+
+@*<form asp-controller="Api/productApi" asp-action="productApi" method="get">
+    <input name="id" type="hidden" value="@item.ProductID" />
+    <input type="submit" value="API!" class="btn btn-primary" />
+</form>*@

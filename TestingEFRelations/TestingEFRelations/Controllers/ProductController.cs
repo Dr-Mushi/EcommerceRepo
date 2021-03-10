@@ -10,6 +10,8 @@ using TestingEFRelations.Models;
 
 namespace TestingEFRelations.Controllers
 {
+   //[ApiController]
+   // [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,7 +26,8 @@ namespace TestingEFRelations.Controllers
         {
             //
             var applicationDbContext = _context.Product.Include(p => p.ProductImage).Include(p => p.ProductSize);
-            return View(await applicationDbContext.ToListAsync());
+            var result = await applicationDbContext.ToListAsync();
+            return View(result);
         }
 
         // GET: Product/Details/5
@@ -35,10 +38,45 @@ namespace TestingEFRelations.Controllers
                 return NotFound();
             }
 
+
+
             var product = await _context.Product
                 .Include(p => p.ProductImage)
                 .Include(p => p.ProductSize)
+                .Include(p => p.ProductSmlImage)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
+                
+
+            //var temp = await _context.Image
+            //    .Include(p => p.SmlImages)
+            //    .Include(p => p.Products)
+            //    .FirstOrDefaultAsync(i => i.ID == product.ImageID);
+
+
+
+            //var result = await temp.FirstOrDefaultAsync(i => i.ID == product.ImageID);
+
+
+
+
+            //    .where(m => m.ImageID == product.ImageID)
+            //    .ToListAsync();
+
+            //var temp = from m in _context.SmlImage
+            //         select m;
+
+            // var temps = temp.Where(m => m.ImageID == product.ImageID);
+
+            // ViewData["smlImages"] = temps;
+
+
+            //var getSmlImages = await _context.SmlImage
+            //    .Find()
+            //    .where(m => m.ImageID == product.ImageID)
+            //    .ToListAsync();
+
+            //ViewBag.smlImages = getSmlImages.SmlImageName;
+
             if (product == null)
             {
                 return NotFound();
@@ -164,5 +202,11 @@ namespace TestingEFRelations.Controllers
         {
             return _context.Product.Any(e => e.ProductID == id);
         }
+
+        //[Route("api/[controller]/[action]")]
+        //public string Get() {
+
+        //    return "hello";
+        //}
     }
 }

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<TestingEFRelations.Models.Wishlist>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Wishlist</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WishlistProductQuantity)
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Total
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WishlistProductQuantity)
+                </td>
+                <td>
+                    status
+                </td>
+                <td>
+                    total
+                </td>
+                <td>
+                    <form asp-action="Delete">
+                        <input type="hidden" name="ID" value="@item.ProductID"/>
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+
+                </td>
+                <td>
+                    <form asp-controller="Cart" asp-action="Create" method="post" class="mr-1">
+                        <input name="ProductID" type="hidden" value="@item.ProductID" />
+                        <input name="CartProductQuantity" type="hidden" value="1" />
+                        <input type="submit" value="Add to Cart" class="btn btn-primary" />
+                    </form>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                <a asp-controller="Product" asp-action="Index">Back to List</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+@*<td>
+        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+    </td>*@

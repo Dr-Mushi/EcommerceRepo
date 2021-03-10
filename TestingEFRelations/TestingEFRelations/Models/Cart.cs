@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace TestingEFRelations.Models
         ////[InverseProperty("Product_Price")]
         //public int Product_Price { get; set; }
         //public Product ProductPrice { get; set; }
-       
+
+        [Display(Name = "Quantity")]
         public int CartProductQuantity { get; set; }
 
 
