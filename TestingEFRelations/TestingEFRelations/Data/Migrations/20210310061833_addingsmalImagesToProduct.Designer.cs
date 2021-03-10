@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestingEFRelations.Data;
 
 namespace TestingEFRelations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210310061833_addingsmalImagesToProduct")]
+    partial class addingsmalImagesToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,12 +283,17 @@ namespace TestingEFRelations.Migrations
                     b.Property<int>("ProductQuantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductSmlImageID")
+                        .HasColumnType("int");
+
                     b.Property<int>("SizeID")
                         .HasColumnType("int");
 
                     b.HasKey("ProductID");
 
                     b.HasIndex("ImageID");
+
+                    b.HasIndex("ProductSmlImageID");
 
                     b.HasIndex("SizeID");
 
@@ -315,7 +322,7 @@ namespace TestingEFRelations.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProductID")
+                    b.Property<int>("ImageID")
                         .HasColumnType("int");
 
                     b.Property<string>("SmlImageName")
@@ -323,7 +330,7 @@ namespace TestingEFRelations.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ImageID");
 
                     b.ToTable("SmlImage");
                 });
@@ -416,6 +423,10 @@ namespace TestingEFRelations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TestingEFRelations.Models.SmlImage", "ProductSmlImage")
+                        .WithMany()
+                        .HasForeignKey("ProductSmlImageID");
+
                     b.HasOne("TestingEFRelations.Models.Size", "ProductSize")
                         .WithMany("Products")
                         .HasForeignKey("SizeID")
@@ -425,9 +436,11 @@ namespace TestingEFRelations.Migrations
 
             modelBuilder.Entity("TestingEFRelations.Models.SmlImage", b =>
                 {
-                    b.HasOne("TestingEFRelations.Models.Product", null)
-                        .WithMany("ProductSmlImage")
-                        .HasForeignKey("ProductID");
+                    b.HasOne("TestingEFRelations.Models.Image", "Image")
+                        .WithMany("SmlImages")
+                        .HasForeignKey("ImageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TestingEFRelations.Models.Wishlist", b =>

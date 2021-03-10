@@ -3,7 +3,7 @@
     public class Address
     {
 
-        //public int ID { get; set; }
-        //public string AddressName { get; set; }
+        public int ID { get; set; } = 0;
+        public string AddressName { get; set; } = "testing address";
     }
 }

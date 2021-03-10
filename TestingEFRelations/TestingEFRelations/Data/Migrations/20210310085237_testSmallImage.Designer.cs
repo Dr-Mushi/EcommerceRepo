@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestingEFRelations.Data;
 
 namespace TestingEFRelations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210310085237_testSmallImage")]
+    partial class testSmallImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,6 +317,9 @@ namespace TestingEFRelations.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ImageID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
@@ -322,6 +327,8 @@ namespace TestingEFRelations.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ImageID");
 
                     b.HasIndex("ProductID");
 
@@ -425,6 +432,12 @@ namespace TestingEFRelations.Migrations
 
             modelBuilder.Entity("TestingEFRelations.Models.SmlImage", b =>
                 {
+                    b.HasOne("TestingEFRelations.Models.Image", "Image")
+                        .WithMany("SmlImages")
+                        .HasForeignKey("ImageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TestingEFRelations.Models.Product", null)
                         .WithMany("ProductSmlImage")
                         .HasForeignKey("ProductID");

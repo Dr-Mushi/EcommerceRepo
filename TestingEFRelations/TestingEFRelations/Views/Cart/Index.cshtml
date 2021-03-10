@@ -1,0 +1,89 @@
+﻿@model IEnumerable<TestingEFRelations.Models.Cart>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h1>Cart</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartProductQuantity)
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Total
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CartProductQuantity)
+            </td>
+            <td>
+                status
+            </td>
+            <td>
+                total
+            </td>
+            <td>
+                <form asp-action="Delete">
+                    <input type="hidden" name="ID" value="@item.ProductID" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
+
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+
+<table>
+    <thead class="table">
+        <tr>
+            <th>
+                Cart Total:
+            </th>
+        </tr>
+    </thead>
+</table>
+<form>
+    <input type="submit" value="Procced to Checkout" class="btn btn-outline-primary">
+</form>
+@*<td>
+        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+    </td>*@

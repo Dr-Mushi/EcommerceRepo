@@ -11,6 +11,8 @@ namespace TestingEFRelations.Models
         public string ImageName { get; set; }
 
         public List<Product> Products { get; set; }
-        public List<SmlImage> SmlImages { get; set; }
+
+
+        //public List<SmlImage> SmlImages { get; set; }
     }
 }
