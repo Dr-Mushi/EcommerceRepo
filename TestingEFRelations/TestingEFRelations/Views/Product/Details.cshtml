@@ -5,93 +5,133 @@
 }
 
 
+<div class="row">
+    <div class="col">
+        @Html.DisplayNameFor(model => model.ProductSmlImage)
+    </div>
+
+    <div class="col">
+        <p>@Html.DisplayNameFor(model => model.ProductName)</p>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col">
+        <p>@Html.DisplayNameFor(model => model.ProductDescription)</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @Html.DisplayNameFor(model => model.ProductSize)
+    </div>
+
+    <div class="col">Status</div>
+
+</div>
+
+<div class="row">
+    <div class="col">
+        @Html.DisplayNameFor(model => model.ProductPrice)
+    </div>
+
+    <div class="col">
+        <button>Add to Cart</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @Html.DisplayNameFor(model => model.ProductQuantity)
+    </div>
+</div>
+
 @*<div>*@
-    <hr />
+<hr />
 
-    <table border="1">
-        <tr>
-            <td>@Html.DisplayNameFor(model => model.ProductName)</td>
-            <td>@Html.DisplayNameFor(model => model.ProductDescription)</td>
-            <td>@Html.DisplayNameFor(model => model.ProductImage)</td>
-            <td>@Html.DisplayNameFor(model => model.ProductSize)</td>
-            <td>@Html.DisplayNameFor(model => model.ProductQuantity)</td>
-            <td>@Html.DisplayNameFor(model => model.ProductPrice)</td>
-            <td>Status</td>
-        </tr>
-        <tr>
-            <td>@Html.DisplayFor(model => model.ProductName)</td>
-            <td>@Html.DisplayFor(model => model.ProductDescription)</td>
-            <td>@Html.DisplayFor(model => model.ProductImage.ImageName)</td>
-            <td>@Html.DisplayFor(model => model.ProductSize.SizeName)</td>
-            <td>@Html.DisplayFor(model => model.ProductQuantity)</td>
-            <td>@Html.DisplayFor(model => model.ProductPrice)</td>
-            <td>Status value</td>
+<table border="1">
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.ProductName)</td>
+        <td>@Html.DisplayNameFor(model => model.ProductDescription)</td>
+        <td>@Html.DisplayNameFor(model => model.ProductImage)</td>
+        <td>@Html.DisplayNameFor(model => model.ProductSize)</td>
+        <td>@Html.DisplayNameFor(model => model.ProductQuantity)</td>
+        <td>@Html.DisplayNameFor(model => model.ProductPrice)</td>
+        <td>Status</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayFor(model => model.ProductName)</td>
+        <td>@Html.DisplayFor(model => model.ProductDescription)</td>
+        <td>@Html.DisplayFor(model => model.ProductImage.ImageName)</td>
+        <td>@Html.DisplayFor(model => model.ProductSize.SizeName)</td>
+        <td>@Html.DisplayFor(model => model.ProductQuantity)</td>
+        <td>@Html.DisplayFor(model => model.ProductPrice)</td>
+        <td>Status value</td>
+    </tr>
+</table>
 
-           
-        </tr>
-    </table>
-
-    <table>
-        @foreach (var item in Model.ProductSmlImage)
-        {
+<table>
+    @foreach (var item in Model.ProductSmlImage)
+    {
         <tr>
             <th>@Html.DisplayNameFor(model => model.ProductSmlImage)</th>
             <td>@Html.DisplayFor(i => item.SmlImageName)</td>
         </tr>
-       
-        }
-    </table>
-    @*<dl class="row">
-        <dt class="col-sm-2">
-           
-        </dt>
-        <dd class="col-sm-10">
-           
-        </dd>
-        <dt class="col-sm-2">
-            
-        </dt>
-        <dd class="col-sm-10">
-            
-        </dd>
-        <dt class="col-sm-2">
-           
-        </dt>
-        <dd>
-            
-        </dd>
-        <dt class="col-sm-2">
-            
-        </dt>
-        <dd class="col-sm-10">
-           
-        </dd>
-        <dt class="col-sm-2">
-           
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductSize.ID)
-        </dd>
-        <dt class="col-sm-2">
-            
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductQuantity)
-        </dd>
-        <dt class="col-sm-2">
-           
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductPrice)
-        </dd>
-        <dt class="col-sm-2">
-            
-        </dt>
-        <dd class="col-sm-10">
-            
-        </dd>
-    </dl>
-</div>*@
+
+    }
+</table>
+@*<dl class="row">
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd>
+
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductSize.ID)
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductQuantity)
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductPrice)
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+
+            </dd>
+        </dl>
+    </div>*@
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a> |
     <a asp-action="Index">Back to List</a>
