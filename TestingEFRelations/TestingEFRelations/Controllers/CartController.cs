@@ -77,12 +77,14 @@ namespace TestingEFRelations.Controllers
                         action = "index"
                     });
                 }
+
+                 
                 _context.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
-            return View(cart);
+            return View(nameof(Index));
         }
 
         // GET: Carts/Edit/5

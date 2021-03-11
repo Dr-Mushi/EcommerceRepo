@@ -35,7 +35,7 @@ namespace TestingEFRelations.Models
         public int CartProductQuantity { get; set; }
 
 
-
+        public double CartTotal { get; set; }
 
         //public int ApplicationUserID { get; set; }
         //public ApplicationUser User { get; set; }
