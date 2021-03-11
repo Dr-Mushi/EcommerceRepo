@@ -26,7 +26,19 @@ namespace TestingEFRelations.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Product.ProductImage).Include(c => c.Product.ProductSize);
-            return View(await applicationDbContext.ToListAsync());
+
+            var getAllCartItems = await applicationDbContext.ToListAsync();
+
+            double cartTotal = 0;
+
+            foreach (var item in getAllCartItems)
+            {
+                cartTotal += item.CartTotal;
+            }
+
+            ViewData["cartTotal"] = cartTotal.ToString("0.00");
+
+            return View(getAllCartItems);
         }
 
         // GET: Carts/Details/5
@@ -78,7 +90,9 @@ namespace TestingEFRelations.Controllers
                     });
                 }
 
-                 
+                var productItem =await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
+                cart.CartTotal += cart.CartProductQuantity * productItem.ProductPrice;
+
                 _context.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

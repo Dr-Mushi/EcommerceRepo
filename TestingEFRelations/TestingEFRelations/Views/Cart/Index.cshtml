@@ -4,6 +4,17 @@
     ViewData["Title"] = "Cart";
 }
 
+@*@{
+    double cartTotal = 0;
+
+    foreach (var item in Model)
+    {
+        cartTotal += item.CartTotal;
+    }
+}*@
+
+
+
 <h1>Cart</h1>
 
 <table class="table">
@@ -35,55 +46,57 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CartProductQuantity)
-            </td>
-            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CartProductQuantity)
+                </td>
+
                 @if (item.Product.ProductQuantity > 0)
-                 {
+                {
                     <td>In Stock</td>
-                 }
+                }
                 else
                 {
                     <td>Out of Stock</td>
                 }
-            <td>
-                @*Total*@
-                @(@item.CartProductQuantity * @item.Product.ProductPrice)
-            </td>
-            <td>
-                <form asp-action="Delete">
-                    <input type="hidden" name="ID" value="@item.ProductID" />
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                </form>
+                <td>
+                    @*Total*@
+                    @(@item.CartProductQuantity * @item.Product.ProductPrice)
+                </td>
+                <td>
+                    <form asp-action="Delete">
+                        <input type="hidden" name="ID" value="@item.ProductID" />
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
 
-            </td>
+                </td>
 
-        </tr>
+            </tr>
         }
     </tbody>
 </table>
- 
-<table>
-    <thead class="table"> 
 
+<table>
+    <thead class="table">
         <tr>
             <th>
                 Cart total:
             </th>
+            <td>
+                @ViewData["cartTotal"]
+            </td>
         </tr>
     </thead>
 </table>
