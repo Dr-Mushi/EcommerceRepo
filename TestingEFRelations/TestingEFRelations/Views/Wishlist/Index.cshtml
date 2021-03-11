@@ -38,43 +38,49 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.ProductPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WishlistProductQuantity)
-                </td>
-                <td>
-                    status
-                </td>
-                <td>
-                    total
-                </td>
-                <td>
-                    <form asp-action="Delete">
-                        <input type="hidden" name="ID" value="@item.ProductID"/>
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                    </form>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductImage.ImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WishlistProductQuantity)
+            </td>
+            @if (item.Product.ProductQuantity > 0)
+            {
+                <td>In Stock</td>
+            }
+            else
+            {
+                <td>Out of Stock</td>
+            }
+            <td>
+                @*Total*@
+                @(@item.WishlistProductQuantity * @item.Product.ProductPrice)
+            </td>
+            <td>
+                <form asp-action="Delete">
+                    <input type="hidden" name="ID" value="@item.ProductID" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
 
-                </td>
-                <td>
-                    <form asp-controller="Cart" asp-action="Create" method="post" class="mr-1">
-                        <input name="ProductID" type="hidden" value="@item.ProductID" />
-                        <input name="CartProductQuantity" type="hidden" value="1" />
-                        <input type="submit" value="Add to Cart" class="btn btn-primary" />
-                    </form>
-                </td>
-            </tr>
+            </td>
+            <td>
+                <form asp-controller="Cart" asp-action="Create" method="post" class="mr-1">
+                    <input name="ProductID" type="hidden" value="@item.ProductID" />
+                    <input name="CartProductQuantity" type="hidden" value="1" />
+                    <input type="submit" value="Add to Cart" class="btn btn-primary" />
+                </form>
+            </td>
+        </tr>
         }
         <tr>
             <td>

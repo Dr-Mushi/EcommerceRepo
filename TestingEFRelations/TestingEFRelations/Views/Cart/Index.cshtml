@@ -51,11 +51,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CartProductQuantity)
             </td>
+            
+                @if (item.Product.ProductQuantity > 0)
+                 {
+                    <td>In Stock</td>
+                 }
+                else
+                {
+                    <td>Out of Stock</td>
+                }
             <td>
-                status
-            </td>
-            <td>
-                total
+                @*Total*@
+                @(@item.CartProductQuantity * @item.Product.ProductPrice)
             </td>
             <td>
                 <form asp-action="Delete">
@@ -71,10 +78,11 @@
 </table>
 
 <table>
-    <thead class="table">
+    <thead class="table"> 
+
         <tr>
             <th>
-                Cart Total:
+                Cart total:
             </th>
         </tr>
     </thead>

@@ -15,8 +15,6 @@
                 <div class="text-wrap bg-light border rounded ">
                     @Html.DisplayFor(model => model.ProductName)
                 </div>
-                @*<p>@Html.DisplayNameFor(model => model.ProductName):</p>*@
-                @*<input class="col-12" value="@Html.DisplayFor(model => model.ProductName)" disabled>*@
             </div>
         </div>
         <div class="row">
@@ -26,11 +24,6 @@
                           rows="8"
                           cols="50"
                           style="resize: none;">@Html.DisplayFor(model => model.ProductDescription)</textarea>
-
-
-    
-                @*<p>@Html.DisplayNameFor(model => model.ProductDescription):</p>*@
-
             </div>
         </div>
     </div>
@@ -43,31 +36,40 @@
         @Html.DisplayNameFor(model => model.ProductSize):
         @Html.DisplayFor(model => model.ProductSize.SizeName)
     </div>
-
-    <div class="col">Status value</div>
-
+    @if (Model.ProductQuantity > 0)
+    {
+        <div class="col">
+            <p>Status: In Stock</p>
+        </div>
+    }
+    else
+    {
+        <div class="col">
+            <p>Status: Out of Stock</p>
+        </div>
+    }
 </div>
+<form asp-controller="Cart" asp-action="Create">
+    <div class="row m-2">
+        <div class="col-2 offset-4">
+            @Html.DisplayNameFor(model => model.ProductPrice):
+            @Html.DisplayFor(model => model.ProductPrice)$
+        </div>
 
-<div class="row m-2">
-    <div class="col-2 offset-4">
-        @Html.DisplayNameFor(model => model.ProductPrice):
-        @Html.DisplayFor(model => model.ProductPrice)$
+        <div class="col">
+            <input name="ProductID" type ="hidden" value="@Model.ProductID"/>
+            <input type="submit" value="Add to Cart"  class="btn btn-success" >
+        </div>
     </div>
 
-    <div class="col ">
-        <button class="btn btn-success">Add to Cart</button>
+    <div class="row">
+        <div class="col-4 offset-4">
+            @Html.DisplayNameFor(model => model.ProductQuantity):
+            <input name="CartProductQuantity" type="number" max="@Model.ProductQuantity" min="1" value="1" />
+        </div>
     </div>
-</div>
+</form>
 
-<div class="row">
-    <div class="col-4 offset-4">
-        @Html.DisplayNameFor(model => model.ProductQuantity):
-        @Html.DisplayFor(model => model.ProductQuantity)
-        quantity user input
-    </div>
-</div>
-
-@*<div>*@
 <hr />
 <div class ="display-4 ">Debug</div>
 <table border="1">

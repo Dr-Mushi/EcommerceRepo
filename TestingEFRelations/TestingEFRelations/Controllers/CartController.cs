@@ -65,6 +65,7 @@ namespace TestingEFRelations.Controllers
             if (ModelState.IsValid)
             {
                 
+                //if wishlist has the same item, that was added to the cart, remove the item from the wishlist
                 if (await _wishlistRepository.HasSameItem(cart.ProductID))
                 {
                     await _wishlistRepository.DeleteSameItem(cart.ProductID);
