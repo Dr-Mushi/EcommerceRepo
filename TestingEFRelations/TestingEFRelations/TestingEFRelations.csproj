@@ -18,6 +18,36 @@
     <Compile Remove="Data\Migrations\20210307080228_test.Designer.cs" />
     <Compile Remove="Data\Migrations\20210307080555_test.cs" />
     <Compile Remove="Data\Migrations\20210307080555_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311105329_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311105329_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311112509_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311112509_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311112751_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311112751_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311114402_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311114402_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311114509_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311114509_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311114631_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311114631_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311114841_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210311114841_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311123250_addProductID.cs" />
+    <Compile Remove="Data\Migrations\20210311123250_addProductID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311124504_test.cs" />
+    <Compile Remove="Data\Migrations\20210311124504_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314045317_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314045317_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314060731_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314060731_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314061346_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314061346_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314063923_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314063923_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314064557_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314064557_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314082952_AddReceipt.cs" />
+    <Compile Remove="Data\Migrations\20210314082952_AddReceipt.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

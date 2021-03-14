@@ -5,13 +5,13 @@
 }
 
 @*@{
-    double cartTotal = 0;
+        double cartTotal = 0;
 
-    foreach (var item in Model)
-    {
-        cartTotal += item.CartTotal;
-    }
-}*@
+        foreach (var item in Model)
+        {
+            cartTotal += item.CartTotal;
+        }
+    }*@
 
 
 
@@ -100,7 +100,7 @@
         </tr>
     </thead>
 </table>
-<form>
+<form asp-controller="Receipt" asp-action="Create" method="post">
     <input type="submit" value="Procced to Checkout" class="btn btn-outline-primary">
 </form>
 @*<td>

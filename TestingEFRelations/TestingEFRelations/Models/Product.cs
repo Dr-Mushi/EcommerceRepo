@@ -32,6 +32,8 @@ namespace TestingEFRelations.Models
 
         [Display(Name = "Small Image")]
         public List<SmlImage> ProductSmlImage { get; set; }
+        //[InverseProperty("Product")]
+        public List<Receipt> Receipt { get; set; }
 
 
 

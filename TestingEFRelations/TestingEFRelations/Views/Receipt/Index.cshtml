@@ -1,0 +1,69 @@
+﻿@model IEnumerable<TestingEFRelations.Models.Receipt>
+
+@{
+    ViewData["Title"] = "Thank You";
+}
+
+
+
+
+<h1>Thank you for your purchase!</h1>
+
+<h3>Receipt</h3>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductPrice)
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            @{
+                ViewData["receiptTotal"] = item.ReceiptTotal.ToString("0.00");
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductSize.SizeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiptProductQuantity)
+            </td>
+            <td>
+
+                @ViewData["receiptTotal"]
+            </td>
+
+        </tr>
+        }
+        <tr>
+            <th>
+                Total:
+            </th>
+            <th>
+                @ViewData["total"]
+            </th>
+        </tr>
+    </tbody>
+</table>

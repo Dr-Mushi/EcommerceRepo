@@ -22,5 +22,7 @@ namespace TestingEFRelations.Data
         public DbSet<TestingEFRelations.Models.Product> Product { get; set; }
         public DbSet<TestingEFRelations.Models.SmlImage> SmlImage { get; set; }
         public DbSet<TestingEFRelations.Models.Image> Image { get; set; }
+        public DbSet<TestingEFRelations.Models.Receipt> Receipt { get; set; }
+        public DbSet<TestingEFRelations.Models.Size> Size { get; set; }
     }
 }

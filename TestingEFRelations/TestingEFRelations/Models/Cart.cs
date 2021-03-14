@@ -37,6 +37,9 @@ namespace TestingEFRelations.Models
 
         public double CartTotal { get; set; }
 
+        //[InverseProperty("Cart")]
+        //public Receipt Receipt { get; set; }
+
         //public int ApplicationUserID { get; set; }
         //public ApplicationUser User { get; set; }
     }

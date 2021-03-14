@@ -25,7 +25,10 @@ namespace TestingEFRelations.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Product.ProductImage).Include(c => c.Product.ProductSize);
+            var applicationDbContext = _context.Cart.Include(c => c.Product)
+                .Include(r => r.Product.ProductSize)
+                .Include(r => r.Product.ProductImage)
+                .Include(r => r.Product.ProductSmlImage); 
 
             var getAllCartItems = await applicationDbContext.ToListAsync();
 
@@ -76,11 +79,24 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+                var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
+                cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
+
                 //if wishlist has the same item, that was added to the cart, remove the item from the wishlist
                 if (await _wishlistRepository.HasSameItem(cart.ProductID))
                 {
                     await _wishlistRepository.DeleteSameItem(cart.ProductID);
+
+                    if (await HasSameItem(cart.ProductID))
+                    {
+                        await IncreaseProductQuantity(cart, cart.CartProductQuantity);
+                        return RedirectToRoute(new
+                        {
+                            controller = "Wishlist",
+                            action = "index"
+                        });
+                    }
+
                     _context.Add(cart);
                     await _context.SaveChangesAsync();
                     return RedirectToRoute(new
@@ -90,14 +106,19 @@ namespace TestingEFRelations.Controllers
                     });
                 }
 
-                var productItem =await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
-                cart.CartTotal += cart.CartProductQuantity * productItem.ProductPrice;
+                if (await HasSameItem(cart.ProductID))
+                {
+                    await IncreaseProductQuantity(cart, cart.CartProductQuantity);
+                    return RedirectToAction(nameof(Index));
+
+                }
+
 
                 _context.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
+            //ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
             return View(nameof(Index));
         }
 
@@ -134,6 +155,7 @@ namespace TestingEFRelations.Controllers
             {
                 try
                 {
+
                     _context.Update(cart);
                     await _context.SaveChangesAsync();
                 }
@@ -187,6 +209,47 @@ namespace TestingEFRelations.Controllers
         private bool CartExists(int id)
         {
             return _context.Cart.Any(e => e.ID == id);
+        }
+
+
+        public async Task<bool> HasSameItem(int? id)
+        {
+            if (id == null)
+            {
+                return false;
+            }
+
+            var cart = await _context.Cart
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (cart == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> IncreaseProductQuantity(Cart cartID , int quantity)
+        {
+            
+            
+            var cart = await _context.Cart
+                .FirstOrDefaultAsync(m => m.ProductID == cartID.ProductID);
+
+            var increasedQuantity =  cart.CartProductQuantity += quantity;
+            if (increasedQuantity <= cart.Product.ProductQuantity)
+            {
+                var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
+                cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
+                await Edit(cart.ID, cart);
+                return true;
+            }
+            
+
+            return false;
+
+
+         
         }
     }
 }
