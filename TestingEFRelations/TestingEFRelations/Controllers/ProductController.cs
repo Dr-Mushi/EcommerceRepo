@@ -43,7 +43,6 @@ namespace TestingEFRelations.Controllers
             var product = await _context.Product
                 .Include(p => p.ProductImage)
                 .Include(p => p.ProductSize)
-                .Include(p => p.ProductSmlImage)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
                 
 
@@ -107,7 +106,7 @@ namespace TestingEFRelations.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ImageID);
+            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
             ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
             return View(product);
         }
@@ -125,7 +124,7 @@ namespace TestingEFRelations.Controllers
             {
                 return NotFound();
             }
-            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ImageID);
+            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
             ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
             return View(product);
         }
@@ -162,7 +161,7 @@ namespace TestingEFRelations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ImageID);
+            ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
             ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
             return View(product);
         }

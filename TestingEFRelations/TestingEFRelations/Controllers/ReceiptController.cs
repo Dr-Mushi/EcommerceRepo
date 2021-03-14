@@ -22,14 +22,13 @@ namespace TestingEFRelations.Controllers
         // GET: Receipt
         public async Task<IActionResult> Index()
         {
-           
-            
-            
-            
+
+
+
+
             var applicationDbContext = _context.Receipt.Include(r => r.Product)
                 .Include(r => r.Product.ProductSize)
-                .Include(r => r.Product.ProductImage)
-                .Include(r => r.Product.ProductSmlImage);
+                .Include(r => r.Product.ProductImage);
             var getAllReceiptItems = await applicationDbContext.ToListAsync();
 
 

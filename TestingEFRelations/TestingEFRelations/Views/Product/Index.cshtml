@@ -11,7 +11,6 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-
 <div class="row">
 
     @foreach (var item in Model)
@@ -20,7 +19,7 @@
         <div class="card m-1" style="width: 18rem; ">
 
             <div class="card-body">
-                <a asp-action="Details" asp-route-id="@item.ProductID"><img src="~/Images/PlaceholderImage.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage.ImageName)"></a>
+                <a asp-action="Details" asp-route-id="@item.ProductID"><img src="~/Images/PlaceholderImagex.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage[0].ImageName)"></a>
 
                 <a asp-action="Details" asp-route-id="@item.ProductID"><p class="card-title text-center text-dark">@Html.DisplayFor(modelItem => item.ProductName)</p></a>
 
@@ -49,7 +48,7 @@
             </div>
         </div>
 
-    }
+     }
 
 </div>
 

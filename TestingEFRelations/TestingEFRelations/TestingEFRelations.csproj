@@ -48,6 +48,10 @@
     <Compile Remove="Data\Migrations\20210314064557_AddReceipt.Designer.cs" />
     <Compile Remove="Data\Migrations\20210314082952_AddReceipt.cs" />
     <Compile Remove="Data\Migrations\20210314082952_AddReceipt.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314113114_removeSmlImages.cs" />
+    <Compile Remove="Data\Migrations\20210314113114_removeSmlImages.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210314113837_removeSmlImages.cs" />
+    <Compile Remove="Data\Migrations\20210314113837_removeSmlImages.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

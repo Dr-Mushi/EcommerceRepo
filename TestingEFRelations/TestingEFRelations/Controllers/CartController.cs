@@ -27,8 +27,8 @@ namespace TestingEFRelations.Controllers
         {
             var applicationDbContext = _context.Cart.Include(c => c.Product)
                 .Include(r => r.Product.ProductSize)
-                .Include(r => r.Product.ProductImage)
-                .Include(r => r.Product.ProductSmlImage); 
+                .Include(r => r.Product.ProductImage);
+                
 
             var getAllCartItems = await applicationDbContext.ToListAsync();
 

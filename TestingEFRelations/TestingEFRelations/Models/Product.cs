@@ -15,10 +15,10 @@ namespace TestingEFRelations.Models
         public string ProductName { get; set; }
         [Display(Name = "Description")]
         public string ProductDescription { get; set; }
-        [Display(Name = "Image ID")]
-        public int ImageID { get; set; }
+        //[Display(Name = "Image ID")]
+        //public int ImageID { get; set; }
         [Display(Name = "Image")]
-        public Image ProductImage { get; set; }
+        public List<Image> ProductImage { get; set; }
         [Display(Name = "Size ID")]
         public int SizeID { get; set; }
         [Display(Name = "Size")]
@@ -30,8 +30,8 @@ namespace TestingEFRelations.Models
 
         public List<Cart> Cart { get; set; }
 
-        [Display(Name = "Small Image")]
-        public List<SmlImage> ProductSmlImage { get; set; }
+        //[Display(Name = "Small Image")]
+        //public List<SmlImage> ProductSmlImage { get; set; }
         //[InverseProperty("Product")]
         public List<Receipt> Receipt { get; set; }
 

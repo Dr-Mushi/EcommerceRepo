@@ -85,7 +85,7 @@
     <tr>
         <td>@Html.DisplayFor(model => model.ProductName)</td>
         <td>@Html.DisplayFor(model => model.ProductDescription)</td>
-        <td>@Html.DisplayFor(model => model.ProductImage.ImageName)</td>
+        @*<td>@Html.DisplayFor(model => model.ProductImage.ImageName)</td>*@
         <td>@Html.DisplayFor(model => model.ProductSize.SizeName)</td>
         <td>@Html.DisplayFor(model => model.ProductQuantity)</td>
         <td>@Html.DisplayFor(model => model.ProductPrice)</td>
@@ -94,11 +94,11 @@
 </table>
 
 <table>
-    @foreach (var item in Model.ProductSmlImage)
+    @foreach (var item in Model.ProductImage)
     {
         <tr>
-            <th>@Html.DisplayNameFor(model => model.ProductSmlImage)</th>
-            <td>@Html.DisplayFor(i => item.SmlImageName)</td>
+            <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+            <td>@Html.DisplayFor(i => item.ImageName)</td>
         </tr>
 
     }

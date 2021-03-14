@@ -10,7 +10,7 @@ namespace TestingEFRelations.Models
         public int ID { get; set; }
         public string ImageName { get; set; }
 
-        public List<Product> Products { get; set; }
+        public Product Products { get; set; }
 
 
         //public List<SmlImage> SmlImages { get; set; }

@@ -12,7 +12,7 @@ namespace TestingEFRelations.Models
         [Display(Name ="Small Image")]
         public string SmlImageName { get; set; }
 
-        public int ProductID { get; set; }
+        //public int ProductID { get; set; }
 
         //public int ImageID { get; set; }
 

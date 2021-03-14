@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestingEFRelations.Data;
 
 namespace TestingEFRelations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210314114301_removeSmlImages")]
+    partial class removeSmlImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,12 +259,7 @@ namespace TestingEFRelations.Migrations
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductsProductID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("ProductsProductID");
 
                     b.ToTable("Image");
                 });
@@ -273,6 +270,9 @@ namespace TestingEFRelations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ImageID")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductDescription")
                         .HasColumnType("nvarchar(max)");
@@ -290,6 +290,8 @@ namespace TestingEFRelations.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductID");
+
+                    b.HasIndex("ImageID");
 
                     b.HasIndex("SizeID");
 
@@ -414,15 +416,14 @@ namespace TestingEFRelations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TestingEFRelations.Models.Image", b =>
-                {
-                    b.HasOne("TestingEFRelations.Models.Product", "Products")
-                        .WithMany("ProductImage")
-                        .HasForeignKey("ProductsProductID");
-                });
-
             modelBuilder.Entity("TestingEFRelations.Models.Product", b =>
                 {
+                    b.HasOne("TestingEFRelations.Models.Image", "ProductImage")
+                        .WithMany("Products")
+                        .HasForeignKey("ImageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TestingEFRelations.Models.Size", "ProductSize")
                         .WithMany("Products")
                         .HasForeignKey("SizeID")
