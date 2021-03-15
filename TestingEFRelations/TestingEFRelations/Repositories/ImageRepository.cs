@@ -23,13 +23,6 @@ namespace TestingEFRelations.Repositories
         //create an image from user input
         public async Task<bool> AddImage(Product product)
         {
-            ////get all products
-            //var getProductModel = _context.Product.Include(p => p.ProductImage);
-            //var productItems = await getProductModel.ToListAsync();
-
-            //var getImageModel = _context.Image;
-            //var ImageItems = await getImageModel.ToListAsync();
-
             //image path
             string imageFolder;
             Image image;
@@ -62,7 +55,7 @@ namespace TestingEFRelations.Repositories
             //create a placeholder if the value is null
             else
             {
-                imageFolder = "/Images/";
+                imageFolder = "Images/";
                 imageFolder += "PlaceholderImage.jpg";
                 string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
             }

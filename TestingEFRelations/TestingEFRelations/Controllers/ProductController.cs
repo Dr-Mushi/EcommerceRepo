@@ -18,15 +18,12 @@ namespace TestingEFRelations.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IImageRepository _imageRepository;
 
         public ProductController(ApplicationDbContext context ,
-            IWebHostEnvironment webHostEnvironment,
             IImageRepository imageRepository)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
             _imageRepository = imageRepository;
         }
 
