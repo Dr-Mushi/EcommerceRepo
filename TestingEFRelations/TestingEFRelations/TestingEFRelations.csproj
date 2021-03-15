@@ -52,6 +52,8 @@
     <Compile Remove="Data\Migrations\20210314113114_removeSmlImages.Designer.cs" />
     <Compile Remove="Data\Migrations\20210314113837_removeSmlImages.cs" />
     <Compile Remove="Data\Migrations\20210314113837_removeSmlImages.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210315073350_AddProductIDForImage.cs" />
+    <Compile Remove="Data\Migrations\20210315073350_AddProductIDForImage.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,6 +79,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.12" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
 </Project>

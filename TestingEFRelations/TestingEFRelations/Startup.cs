@@ -38,6 +38,7 @@ namespace TestingEFRelations
             //Repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

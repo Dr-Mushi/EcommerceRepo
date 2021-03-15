@@ -19,7 +19,7 @@
         <div class="card m-1" style="width: 18rem; ">
 
             <div class="card-body">
-                <a asp-action="Details" asp-route-id="@item.ProductID"><img src="~/Images/PlaceholderImagex.jpg" class="card-img-top" width="50" height="150" alt="@Html.DisplayFor(modelItem => item.ProductImage[0].ImageName)"></a>
+                <a asp-action="Details" asp-route-id="@item.ProductID"><img src="@item.ProductImage[0].ImageName" class="card-img-top" width="50" height="150" alt="@item.ProductName"></a>
 
                 <a asp-action="Details" asp-route-id="@item.ProductID"><p class="card-title text-center text-dark">@Html.DisplayFor(modelItem => item.ProductName)</p></a>
 
