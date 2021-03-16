@@ -22,13 +22,10 @@ namespace TestingEFRelations.Controllers
         // GET: Receipt
         public async Task<IActionResult> Index()
         {
-
-
-
-
             var applicationDbContext = _context.Receipt.Include(r => r.Product)
                 .Include(r => r.Product.ProductSize)
                 .Include(r => r.Product.ProductImage);
+
             var getAllReceiptItems = await applicationDbContext.ToListAsync();
 
 
@@ -45,31 +42,6 @@ namespace TestingEFRelations.Controllers
 
         }
 
-        // GET: Receipt/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var receipt = await _context.Receipt
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (receipt == null)
-            {
-                return NotFound();
-            }
-
-            return View(receipt);
-        }
-
-        // GET: Receipt/Create
-        public IActionResult Create()
-        {
-            ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID");
-            return View();
-        }
-
         // POST: Receipt/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -80,18 +52,15 @@ namespace TestingEFRelations.Controllers
             if (ModelState.IsValid)
             {
                 var productContext = _context.Product;
-                
 
                 var cartContext = _context.Cart;
-
-                //var getCartProduct = await applicationDbContext.ToListAsync();
-
 
                 foreach (var item in cartContext)
                 {
                     receipt.ProductID = item.ProductID;
                     receipt.ReceiptProductQuantity = item.CartProductQuantity;
                     receipt.ReceiptTotal = item.CartTotal;
+                    //remove items from the cart as they are submitted to the receipt
                     var cart = await cartContext.FindAsync(item.ID);
                     cartContext.Remove(cart);
                     _context.Add(receipt);
@@ -104,24 +73,6 @@ namespace TestingEFRelations.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID", receipt.CartID);
-            return View(receipt);
-        }
-
-        // GET: Receipt/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var receipt = await _context.Receipt.FindAsync(id);
-            if (receipt == null)
-            {
-                return NotFound();
-            }
-            //ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID", receipt.CartID);
             return View(receipt);
         }
 
@@ -157,25 +108,6 @@ namespace TestingEFRelations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID", receipt.CartID);
-            return View(receipt);
-        }
-
-        // GET: Receipt/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var receipt = await _context.Receipt
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (receipt == null)
-            {
-                return NotFound();
-            }
-
             return View(receipt);
         }
 
@@ -196,3 +128,69 @@ namespace TestingEFRelations.Controllers
         }
     }
 }
+
+
+//// GET: Receipt/Details/5
+//public async Task<IActionResult> Details(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var receipt = await _context.Receipt
+//        .FirstOrDefaultAsync(m => m.ID == id);
+//    if (receipt == null)
+//    {
+//        return NotFound();
+//    }
+
+//    return View(receipt);
+//}
+
+//// GET: Receipt/Create
+//public IActionResult Create()
+//{
+//    ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID");
+//    return View();
+//}
+
+
+//// GET: Receipt/Delete/5
+//public async Task<IActionResult> Delete(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var receipt = await _context.Receipt
+//        .FirstOrDefaultAsync(m => m.ID == id);
+//    if (receipt == null)
+//    {
+//        return NotFound();
+//    }
+
+//    return View(receipt);
+//}
+
+
+//// GET: Receipt/Edit/5
+//public async Task<IActionResult> Edit(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var receipt = await _context.Receipt.FindAsync(id);
+//    if (receipt == null)
+//    {
+//        return NotFound();
+//    }
+//    //ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID", receipt.CartID);
+//    return View(receipt);
+//}
+
+
+           //ViewData["CartID"] = new SelectList(_context.Cart, "ID", "ID", receipt.CartID);

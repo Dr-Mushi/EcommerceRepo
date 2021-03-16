@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -30,9 +28,12 @@ namespace TestingEFRelations.Controllers
         // GET: Product
         public async Task<IActionResult> Index()
         {
-            //
-            var applicationDbContext = _context.Product.Include(p => p.ProductImage).Include(p => p.ProductSize);
+            
+            var applicationDbContext = _context.Product
+                .Include(p => p.ProductImage)
+                .Include(p => p.ProductSize);
             var result = await applicationDbContext.ToListAsync();
+
             return View(result);
         }
 
@@ -60,8 +61,6 @@ namespace TestingEFRelations.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
-            
-            //ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName");
             ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName");
             return View();
         }
@@ -75,16 +74,15 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
+                //after adding the product, take the product object as it has the new product id and add it to the image
                 _context.Add(product);
                 await _context.SaveChangesAsync();
 
                 await _imageRepository.AddImage(product);
 
-
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
-            ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
             return View(product);
         }
 
@@ -101,8 +99,7 @@ namespace TestingEFRelations.Controllers
             {
                 return NotFound();
             }
-            //ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
-            ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
             return View(product);
         }
 
@@ -138,8 +135,7 @@ namespace TestingEFRelations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ImageName"] = new SelectList(_context.Image, "ID", "ImageName", product.ProductImage);
-            ViewData["SizeName"] = new SelectList(_context.Set<Size>(), "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
             return View(product);
         }
 

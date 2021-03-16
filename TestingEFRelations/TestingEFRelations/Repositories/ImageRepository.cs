@@ -30,13 +30,15 @@ namespace TestingEFRelations.Repositories
             //if the input has value create a new image file
             if (product.ImageFile != null)
             {
-                //Guid.NewGuid().ToString() + "_" +
                 foreach (var item in product.ImageFile)
                 {
                     imageFolder = "Images/";
                     imageFolder += Guid.NewGuid().ToString() + "_" + item.FileName;
+                    //combine server path with the image name
                     string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+                    //Create new image
                     await item.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                    //add new image to image table
                      image = new Image
                     {
                         ProductID = product.ProductID,
@@ -44,37 +46,27 @@ namespace TestingEFRelations.Repositories
                     };
                     _context.Add(image);
                 }
-
-
-
-
-                //imageFolder += Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
-                //string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
-                //await product.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
             }
-            //create a placeholder if the value is null
+            //create a placeholder if the user didn't insert an image
             else
             {
                 imageFolder = "Images/";
                 imageFolder += "PlaceholderImage.jpg";
                 string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
-            }
-
-            //add the new image path into the Image database
-            //Image image = new Image
-            //{
-            //    ProductID = product.ProductID,
-            //    ImageName = imageFolder
-            //};
-
-           
+            }  
             await _context.SaveChangesAsync();
 
             return true;
         }
-
-
-
-
     }
 }
+
+
+
+
+
+//for single image
+
+//imageFolder += Guid.NewGuid().ToString() + "_" + product.ImageFile.FileName;
+//string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+//await product.ImageFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create));

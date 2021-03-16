@@ -64,7 +64,7 @@ namespace TestingEFRelations.Controllers
                     
                     await _wishlistRepository.DeleteSameItem(cart.ProductID);
 
-                    //if cart has the same item that was created from index, increase the quantity of that item.
+                    //if cart has the same item that was created , increase the quantity of that item.
                     if (await HasSameItem(cart.ProductID))
                     {
                         await IncreaseProductQuantity(cart, cart.CartProductQuantity);

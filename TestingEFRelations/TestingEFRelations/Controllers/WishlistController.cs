@@ -56,8 +56,10 @@ namespace TestingEFRelations.Controllers
 
                 wishlist.WishlistTotal = wishlist.WishlistProductQuantity * productItem.ProductPrice;
 
+                //if wishlist has the same item that was created , increase the quantity of that item.
                 if (await HasSameItem(wishlist.ProductID))
                 {
+
                     await IncreaseProductQuantity(wishlist, wishlist.WishlistProductQuantity);
                     return RedirectToAction(nameof(Index));
 
@@ -67,7 +69,6 @@ namespace TestingEFRelations.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", wishlist.ProductID);
             return View(wishlist);
         }
         // POST: Wishlists/Edit/5
@@ -140,10 +141,11 @@ namespace TestingEFRelations.Controllers
 
         public async Task<bool> IncreaseProductQuantity(Wishlist wishlistID, int quantity)
         {
-
+            //get the product Object inside wishlist with the existed wishlist product ID
             var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == wishlistID.ProductID);
 
             var increasedQuantity = wishlist.WishlistProductQuantity += quantity;
+            //check if the increased quantity does NOT exceed the qunatity of the product.
             if (increasedQuantity <= wishlist.Product.ProductQuantity)
             {
                 wishlist.WishlistTotal = wishlist.WishlistProductQuantity * wishlist.Product.ProductPrice;
@@ -229,3 +231,6 @@ namespace TestingEFRelations.Controllers
 //    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
 //    return View();
 //}
+
+
+//ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", wishlist.ProductID);
