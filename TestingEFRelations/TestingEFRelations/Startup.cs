@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TestingEFRelations.Data;
+using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations
 {
@@ -39,6 +40,7 @@ namespace TestingEFRelations
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

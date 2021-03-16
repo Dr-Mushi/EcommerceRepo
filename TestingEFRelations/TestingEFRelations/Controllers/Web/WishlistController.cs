@@ -7,36 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
 using TestingEFRelations.Models;
+using TestingEFRelations.Repositories;
+using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
     public class WishlistController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWishlistRepository _wishlist;
 
-        public WishlistController(ApplicationDbContext context)
+        public WishlistController(ApplicationDbContext context,
+            IWishlistRepository wishlist)
         {
             _context = context;
+            _wishlist = wishlist;
         }
 
         // GET: Wishlists
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Wishlist.Include(w => w.Product)
-                .Include(c => c.Product.ProductImage)
-                .Include(c => c.Product.ProductSize);
+            var getAllWishlistItems = await _wishlist.GetWishlistItems();
 
-            var getAllWishlistItems = await applicationDbContext.ToListAsync();
-
-            double wishlistTotal = 0;
-
-            //sum of all wishlist tables totals
-            foreach (var item in getAllWishlistItems)
-            {
-                wishlistTotal += item.WishlistTotal;
-            }
-
-            ViewData["wishlistTotal"] = wishlistTotal.ToString("0.00");
+            ViewData["wishlistTotal"] = _wishlist.WishlistSumTotal(getAllWishlistItems).ToString("0.00");
 
             return View(getAllWishlistItems);
         }
@@ -50,23 +43,19 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
-                //get product object that has the same ID as the wishlist product
-                var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == wishlist.ProductID);
                 
-
-                wishlist.WishlistTotal = wishlist.WishlistProductQuantity * productItem.ProductPrice;
+                await _wishlist.SetWishlistTotal(wishlist);
 
                 //if wishlist has the same item that was created , increase the quantity of that item.
-                if (await HasSameItem(wishlist.ProductID))
+                if (await _wishlist.HasSameItem(wishlist.ProductID))
                 {
-
                     await IncreaseProductQuantity(wishlist, wishlist.WishlistProductQuantity);
                     return RedirectToAction(nameof(Index));
-
                 }
 
-                _context.Add(wishlist);
-                await _context.SaveChangesAsync();
+                _wishlist.AddWishlist(wishlist);
+                await _wishlist.SaveWishlist();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(wishlist);
@@ -110,10 +99,9 @@ namespace TestingEFRelations.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
-            _context.Wishlist.Remove(wishlist);
-            await _context.SaveChangesAsync();
+        { 
+            await _wishlist.DeleteWishlist(id);
+            await _wishlist.SaveWishlist();
             return RedirectToAction(nameof(Index));
         }
 
@@ -122,22 +110,6 @@ namespace TestingEFRelations.Controllers
             return _context.Wishlist.Any(e => e.ID == id);
         }
 
-        public async Task<bool> HasSameItem(int? id)
-        {
-            if (id == null)
-            {
-                return false;
-            }
-
-            var cart = await _context.Wishlist
-                .FirstOrDefaultAsync(m => m.ProductID == id);
-            if (cart == null)
-            {
-                return false;
-            }
-
-            return true;
-        }
 
         public async Task<bool> IncreaseProductQuantity(Wishlist wishlistID, int quantity)
         {
@@ -234,3 +206,67 @@ namespace TestingEFRelations.Controllers
 
 
 //ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", wishlist.ProductID);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//var applicationDbContext = _context.Wishlist.Include(w => w.Product)
+//    .Include(c => c.Product.ProductImage)
+//    .Include(c => c.Product.ProductSize);
+
+//var getAllWishlistItems = await applicationDbContext.ToListAsync();
+
+//sum of all wishlist tables totals
+//foreach (var item in getAllWishlistItems)
+//{
+//    wishlistTotal += item.WishlistTotal;
+//}
+
+
+
+
+//public async Task<bool> HasSameItem(int? id)
+//{
+//    if (id == null)
+//    {
+//        return false;
+//    }
+
+//    var cart = await _context.Wishlist
+//        .FirstOrDefaultAsync(m => m.ProductID == id);
+//    if (cart == null)
+//    {
+//        return false;
+//    }
+
+//    return true;
+//}
+
+
+
+////get product object that has the same ID as the wishlist product
+//var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == wishlist.ProductID);
+
+
+//wishlist.WishlistTotal = wishlist.WishlistProductQuantity * productItem.ProductPrice;
+
+
+//_context.Add(wishlist);
+//await _context.SaveChangesAsync();
+
+
+//var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
+//_context.Wishlist.Remove(wishlist);
+//await _context.SaveChangesAsync();

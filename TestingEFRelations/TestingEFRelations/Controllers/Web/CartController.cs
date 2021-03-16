@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
 using TestingEFRelations.Models;
-using TestingEFRelations.Repositories;
+using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
@@ -15,34 +12,24 @@ namespace TestingEFRelations.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWishlistRepository _wishlistRepository;
-
-        public CartController(ApplicationDbContext context, IWishlistRepository wishlistRepository)
+        private readonly ICartRepository _cart;
+        public CartController(ApplicationDbContext context,ICartRepository cart,
+            IWishlistRepository wishlistRepository
+            )
         {
             _context = context;
             _wishlistRepository = wishlistRepository;
+            _cart = cart;
         }
 
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Cart.Include(c => c.Product)
-                .Include(r => r.Product.ProductSize)
-                .Include(r => r.Product.ProductImage);
-                
+            var getAllcartItems = await _cart.GetCartItems();
 
-            var getAllCartItems = await applicationDbContext.ToListAsync();
+            ViewData["cartTotal"] = _cart.CartSumTotal(getAllcartItems).ToString("0.00");
 
-            double cartTotal = 0;
-
-            //sum of all cart tables totals
-            foreach (var item in getAllCartItems)
-            {
-                cartTotal += item.CartTotal;
-            }
-
-            ViewData["cartTotal"] = cartTotal.ToString("0.00");
-
-            return View(getAllCartItems);
+            return View(getAllcartItems);
         }
 
         // POST: Carts/Create
@@ -55,8 +42,10 @@ namespace TestingEFRelations.Controllers
             if (ModelState.IsValid)
             {
                 //get product object that has the same ID as the cart product
-                var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
-                cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
+                //var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
+                //cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
+
+                await _cart.SetCartTotal(cart);
 
                 //if wishlist has the same item that was added to the cart, remove the item from the wishlist
                 if (await _wishlistRepository.HasSameItem(cart.ProductID))
@@ -65,7 +54,7 @@ namespace TestingEFRelations.Controllers
                     await _wishlistRepository.DeleteSameItem(cart.ProductID);
 
                     //if cart has the same item that was created , increase the quantity of that item.
-                    if (await HasSameItem(cart.ProductID))
+                    if (await _cart.HasSameItem(cart.ProductID))
                     {
                         await IncreaseProductQuantity(cart, cart.CartProductQuantity);
                         return RedirectToRoute(new
@@ -75,8 +64,8 @@ namespace TestingEFRelations.Controllers
                         });
                     }
 
-                    _context.Add(cart);
-                    await _context.SaveChangesAsync();
+                    _cart.AddCart(cart);
+                    await _cart.SaveCart();
                     return RedirectToRoute(new
                     {
                         controller = "Wishlist",
@@ -85,15 +74,15 @@ namespace TestingEFRelations.Controllers
                 }
 
                 //if cart has the same item that was created, increase the quantity of that item.
-                if (await HasSameItem(cart.ProductID))
+                if (await _cart.HasSameItem(cart.ProductID))
                 {
                     await IncreaseProductQuantity(cart, cart.CartProductQuantity);
                     return RedirectToAction(nameof(Index));
                 }
 
 
-                _context.Add(cart);
-                await _context.SaveChangesAsync();
+                _cart.AddCart(cart);
+                await _cart.SaveCart();
                 return RedirectToAction(nameof(Index));
             }
             return View(nameof(Index));
@@ -136,40 +125,19 @@ namespace TestingEFRelations.Controllers
             return NotFound();
         }
 
-
-
         // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ProductID == id);
-            _context.Cart.Remove(cart);
-            await _context.SaveChangesAsync();
+            await _cart.DeleteCart(id);
+            await _cart.SaveCart();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CartExists(int id)
         {
             return _context.Cart.Any(e => e.ID == id);
-        }
-
-
-        public async Task<bool> HasSameItem(int? id)
-        {
-            if (id == null)
-            {
-                return false;
-            }
-
-            var cart = await _context.Cart
-                .FirstOrDefaultAsync(m => m.ProductID == id);
-            if (cart == null)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         public async Task<bool> IncreaseProductQuantity(Cart cartID , int quantity)
@@ -267,4 +235,46 @@ namespace TestingEFRelations.Controllers
 //    }
 
 //    return View(cart);
+//}
+
+
+
+//var applicationDbContext = _context.Cart.Include(c => c.Product)
+//    .Include(r => r.Product.ProductSize)
+//    .Include(r => r.Product.ProductImage);
+
+
+//var getAllCartItems = await applicationDbContext.ToListAsync();
+
+//double cartTotal = 0;
+
+////sum of all cart tables totals
+//foreach (var item in getAllCartItems)
+//{
+//    cartTotal += item.CartTotal;
+//}
+
+//ViewData["cartTotal"] = cartTotal.ToString("0.00");
+
+//return View(getAllCartItems);
+
+
+
+
+
+//public async Task<bool> HasSameItem(int? id)
+//{
+//    if (id == null)
+//    {
+//        return false;
+//    }
+
+//    var cart = await _context.Cart
+//        .FirstOrDefaultAsync(m => m.ProductID == id);
+//    if (cart == null)
+//    {
+//        return false;
+//    }
+
+//    return true;
 //}
