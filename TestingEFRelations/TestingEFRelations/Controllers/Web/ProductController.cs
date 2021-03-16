@@ -8,33 +8,29 @@ using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories;
+using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
-   //[ApiController]
-   // [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IImageRepository _imageRepository;
+        private readonly IProductRepository _product;
 
         public ProductController(ApplicationDbContext context ,
-            IImageRepository imageRepository)
+            IImageRepository imageRepository,
+            IProductRepository product)
         {
             _context = context;
             _imageRepository = imageRepository;
+            _product = product;
         }
 
         // GET: Product
         public async Task<IActionResult> Index()
         {
-            
-            var applicationDbContext = _context.Product
-                .Include(p => p.ProductImage)
-                .Include(p => p.ProductSize);
-            var result = await applicationDbContext.ToListAsync();
-
-            return View(result);
+            return View(await _product.GetProductItems());
         }
 
         // GET: Product/Details/5
@@ -45,10 +41,7 @@ namespace TestingEFRelations.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .Include(p => p.ProductImage)
-                .Include(p => p.ProductSize)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            var product = await _product.FindProduct(id);
 
             if (product == null)
             {
@@ -82,6 +75,7 @@ namespace TestingEFRelations.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
             return View(product);
         }
@@ -176,3 +170,17 @@ namespace TestingEFRelations.Controllers
         }
     }
 }
+
+
+//var applicationDbContext = _context.Product
+//    .Include(p => p.ProductImage)
+//    .Include(p => p.ProductSize);
+//var result = await applicationDbContext.ToListAsync();
+
+
+//var product = await _context.Product
+//    .Include(p => p.ProductImage)
+//    .Include(p => p.ProductSize)
+//    .FirstOrDefaultAsync(m => m.ProductID == id);
+
+

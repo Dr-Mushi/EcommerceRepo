@@ -41,10 +41,6 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
-                //get product object that has the same ID as the cart product
-                //var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
-                //cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
-
                 await _cart.SetCartTotal(cart);
 
                 //if wishlist has the same item that was added to the cart, remove the item from the wishlist
@@ -105,7 +101,6 @@ namespace TestingEFRelations.Controllers
             {
                 try
                 {
-
                     _context.Update(cart);
                     await _context.SaveChangesAsync();
                 }
