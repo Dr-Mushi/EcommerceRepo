@@ -28,7 +28,6 @@ namespace TestingEFRelations.Controllers
 
             var getAllReceiptItems = await applicationDbContext.ToListAsync();
 
-
             double receiptTotal = 0;
 
             foreach (var item in getAllReceiptItems)
