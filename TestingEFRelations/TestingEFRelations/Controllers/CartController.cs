@@ -34,6 +34,7 @@ namespace TestingEFRelations.Controllers
 
             double cartTotal = 0;
 
+            //sum of all cart tables totals
             foreach (var item in getAllCartItems)
             {
                 cartTotal += item.CartTotal;
@@ -42,32 +43,6 @@ namespace TestingEFRelations.Controllers
             ViewData["cartTotal"] = cartTotal.ToString("0.00");
 
             return View(getAllCartItems);
-        }
-
-        // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Cart
-                .Include(c => c.Product)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return View(cart);
-        }
-
-        // GET: Carts/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
-            return View();
         }
 
         // POST: Carts/Create
@@ -79,14 +54,17 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
+                //get product object that has the same ID as the cart product
                 var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
                 cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
 
-                //if wishlist has the same item, that was added to the cart, remove the item from the wishlist
+                //if wishlist has the same item that was added to the cart, remove the item from the wishlist
                 if (await _wishlistRepository.HasSameItem(cart.ProductID))
                 {
+                    
                     await _wishlistRepository.DeleteSameItem(cart.ProductID);
 
+                    //if cart has the same item that was created from index, increase the quantity of that item.
                     if (await HasSameItem(cart.ProductID))
                     {
                         await IncreaseProductQuantity(cart, cart.CartProductQuantity);
@@ -106,11 +84,11 @@ namespace TestingEFRelations.Controllers
                     });
                 }
 
+                //if cart has the same item that was created, increase the quantity of that item.
                 if (await HasSameItem(cart.ProductID))
                 {
                     await IncreaseProductQuantity(cart, cart.CartProductQuantity);
                     return RedirectToAction(nameof(Index));
-
                 }
 
 
@@ -118,26 +96,9 @@ namespace TestingEFRelations.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
             return View(nameof(Index));
         }
 
-        // GET: Carts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Cart.FindAsync(id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
-            return View(cart);
-        }
 
         // POST: Carts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -172,28 +133,10 @@ namespace TestingEFRelations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
-            return View(cart);
+            return NotFound();
         }
 
-        // GET: Carts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var cart = await _context.Cart
-                .Include(c => c.Product)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return View(cart);
-        }
 
         // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -232,24 +175,96 @@ namespace TestingEFRelations.Controllers
         public async Task<bool> IncreaseProductQuantity(Cart cartID , int quantity)
         {
             
-            
+            //get the product Object inside cart with the existed cart product ID
             var cart = await _context.Cart
                 .FirstOrDefaultAsync(m => m.ProductID == cartID.ProductID);
 
             var increasedQuantity =  cart.CartProductQuantity += quantity;
+            //check if the increased quantity does NOT exceed the qunatity of the product.
             if (increasedQuantity <= cart.Product.ProductQuantity)
             {
-                var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
-                cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
+               //refresh the cart total after quantity increased
+                cart.CartTotal = cart.CartProductQuantity * cart.Product.ProductPrice;
                 await Edit(cart.ID, cart);
                 return true;
             }
-            
-
             return false;
-
-
-         
         }
     }
 }
+
+
+//inside increased quantity method
+// var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == cart.ProductID);
+
+
+
+//ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
+
+// GET: Carts/Delete/5
+//public async Task<IActionResult> Delete(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var cart = await _context.Cart
+//        .Include(c => c.Product)
+//        .FirstOrDefaultAsync(m => m.ID == id);
+//    if (cart == null)
+//    {
+//        return NotFound();
+//    }
+
+//    return View(cart);
+//}
+
+
+// GET: Carts/Edit/5
+//public async Task<IActionResult> Edit(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var cart = await _context.Cart.FindAsync(id);
+//    if (cart == null)
+//    {
+//        return NotFound();
+//    }
+//    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", cart.ProductID);
+//    return View(cart);
+//}
+
+
+
+
+// GET: Carts/Create
+//public IActionResult Create()
+//{
+//    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
+//    return View();
+//}
+
+
+
+//// GET: Carts/Details/5
+//public async Task<IActionResult> Details(int? id)
+//{
+//    if (id == null)
+//    {
+//        return NotFound();
+//    }
+
+//    var cart = await _context.Cart
+//        .Include(c => c.Product)
+//        .FirstOrDefaultAsync(m => m.ID == id);
+//    if (cart == null)
+//    {
+//        return NotFound();
+//    }
+
+//    return View(cart);
+//}

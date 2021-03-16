@@ -33,6 +33,7 @@ namespace TestingEFRelations.Models
         [Display(Name = "Price")]
         public double ProductPrice { get; set; }
 
+        public List<Wishlist> Wishlist { get; set; }
         public List<Cart> Cart { get; set; }
 
         public List<Receipt> Receipt { get; set; }
