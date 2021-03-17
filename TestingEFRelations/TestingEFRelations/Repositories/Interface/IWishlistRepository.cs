@@ -8,7 +8,7 @@ namespace TestingEFRelations.Repositories.Interface
     {
 
         Task<bool> HasSameItem(int? id);
-        Task<bool> DeleteSameItem(int? id);
+        //Task<bool> DeleteSameItem(int? id);
 
         Task<bool> SetWishlistTotal(Wishlist wishlist);
         double WishlistSumTotal(IEnumerable<Wishlist> wishlistItems);
@@ -19,6 +19,12 @@ namespace TestingEFRelations.Repositories.Interface
 
         Task<bool> SaveWishlist();
 
+        void WishlistUpdate(Wishlist wishlist);
+        Task<Wishlist> FindWishlist(int? id);
+
+        Task<Wishlist> IncreaseProductQuantity(Wishlist wishlistID, int quantity);
+
+        bool WishlistExists(int id);
 
     }
 }

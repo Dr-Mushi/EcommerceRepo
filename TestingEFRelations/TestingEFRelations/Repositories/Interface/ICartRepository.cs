@@ -17,5 +17,13 @@ namespace TestingEFRelations.Repositories.Interface
 
         Task<bool> SaveCart();
         Task<bool> HasSameItem(int? id);
+
+
+        void CartUpdate(Cart cart);
+        Task<Cart> FindCart(int? id);
+
+        Task<Cart> IncreaseProductQuantity(Cart cartID, int quantity);
+
+        bool CartExists(int id);
     }
 }

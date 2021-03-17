@@ -42,13 +42,19 @@ namespace TestingEFRelations.Repositories
             return true;
 
         }
-
+        
+        public void WishlistUpdate(Wishlist wishlist)
+        {
+            _context.Update(wishlist);
+        }
 
         public async Task<bool> SaveWishlist()
         {
             return await _context.SaveChangesAsync() > 0;
 
         }
+
+
 
         public double WishlistSumTotal(IEnumerable<Wishlist> wishlistItems)
         {
@@ -89,15 +95,45 @@ namespace TestingEFRelations.Repositories
             return true;
          }
 
-
-        public async Task<bool> DeleteSameItem(int? id)
+        public async Task<Wishlist> FindWishlist(int? id)
         {
             var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
-            _context.Wishlist.Remove(wishlist);
-            await _context.SaveChangesAsync();
 
-            return true;
+            return wishlist;
         }
+
+        public async Task<Wishlist> IncreaseProductQuantity(Wishlist wishlistID, int quantity)
+        {
+            //get the product Object inside wishlist with the existed wishlist product ID
+
+            var wishlist = await FindWishlist(wishlistID.ProductID);
+            
+            var increasedQuantity = wishlist.WishlistProductQuantity += quantity;
+            //check if the increased quantity does NOT exceed the qunatity of the product.
+            if (increasedQuantity <= wishlist.Product.ProductQuantity)
+            {
+                wishlist.WishlistTotal = wishlist.WishlistProductQuantity * wishlist.Product.ProductPrice;
+                
+                return wishlist;
+            }
+            wishlist.WishlistProductQuantity -= quantity;
+            return wishlist;
+        }
+
+        public bool WishlistExists(int id)
+        {
+            return _context.Wishlist.Any(e => e.ID == id);
+        }
+
+        //public async Task<bool> DeleteSameItem(int? id)
+        //{
+        //    var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
+        //    _context.Wishlist.Remove(wishlist);
+        //    await _context.SaveChangesAsync();
+
+        //    return true;
+
+        //}
 
 
 

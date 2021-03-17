@@ -14,13 +14,10 @@ namespace TestingEFRelations.Controllers
 {
     public class WishlistController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IWishlistRepository _wishlist;
 
-        public WishlistController(ApplicationDbContext context,
-            IWishlistRepository wishlist)
+        public WishlistController(IWishlistRepository wishlist)
         {
-            _context = context;
             _wishlist = wishlist;
         }
 
@@ -43,7 +40,7 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 await _wishlist.SetWishlistTotal(wishlist);
 
                 //if wishlist has the same item that was created , increase the quantity of that item.
@@ -76,12 +73,12 @@ namespace TestingEFRelations.Controllers
             {
                 try
                 {
-                    _context.Update(wishlist);
-                    await _context.SaveChangesAsync();
+                    _wishlist.WishlistUpdate(wishlist);
+                    await _wishlist.SaveWishlist();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WishlistExists(wishlist.ID))
+                    if (!_wishlist.WishlistExists(wishlist.ID))
                     {
                         return NotFound();
                     }
@@ -99,32 +96,19 @@ namespace TestingEFRelations.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
-        { 
+        {
             await _wishlist.DeleteWishlist(id);
             await _wishlist.SaveWishlist();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WishlistExists(int id)
-        {
-            return _context.Wishlist.Any(e => e.ID == id);
-        }
-
-
         public async Task<bool> IncreaseProductQuantity(Wishlist wishlistID, int quantity)
         {
-            //get the product Object inside wishlist with the existed wishlist product ID
-            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == wishlistID.ProductID);
 
-            var increasedQuantity = wishlist.WishlistProductQuantity += quantity;
-            //check if the increased quantity does NOT exceed the qunatity of the product.
-            if (increasedQuantity <= wishlist.Product.ProductQuantity)
-            {
-                wishlist.WishlistTotal = wishlist.WishlistProductQuantity * wishlist.Product.ProductPrice;
-                await Edit(wishlist.ID, wishlist);
-                return true;
-            }
-            return false;
+            var wishlist = _wishlist.IncreaseProductQuantity(wishlistID, quantity);
+
+            await Edit(wishlist.Result.ID, wishlist.Result);
+            return true;
         }
     }
 }
@@ -270,3 +254,21 @@ namespace TestingEFRelations.Controllers
 //var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
 //_context.Wishlist.Remove(wishlist);
 //await _context.SaveChangesAsync();
+
+
+
+//    //get the product Object inside wishlist with the existed wishlist product ID
+//    //var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == wishlistID.ProductID);
+
+//    var wishlist = await _wishlist.FindWishlist(wishlistID.ProductID);
+
+//    var increasedQuantity = wishlist.WishlistProductQuantity += quantity;
+//    //check if the increased quantity does NOT exceed the qunatity of the product.
+//    if (increasedQuantity <= wishlist.Product.ProductQuantity)
+//    {
+//        wishlist.WishlistTotal = wishlist.WishlistProductQuantity * wishlist.Product.ProductPrice;
+//        await Edit(wishlist.ID, wishlist);
+//        return true;
+//    }
+//    return false;
+//}

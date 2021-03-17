@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace TestingEFRelations.Repositories
         }
         public void AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            _context.Add(product);
         }
 
         public async Task<Product> FindProduct(int? id)
@@ -42,9 +43,35 @@ namespace TestingEFRelations.Repositories
             return getAllProductItems;
         }
 
+        public async Task<bool> DeleteProduct(int? id) 
+        {
+
+
+            var product = await _context.Product.FindAsync(id);
+            _context.Product.Remove(product);
+            return true;
+        }
+
         public async Task<bool> SaveProduct()
         {
-            throw new NotImplementedException();
+           return await _context.SaveChangesAsync() > 0;
         }
+
+        public SelectList SelectListSize()
+        {
+            return new SelectList(_context.Size, "ID", "SizeName");
+        }
+
+        public bool ProductExists(int id)
+        {
+            return _context.Product.Any(e => e.ProductID == id);
+        }
+
+        public void ProductUpdate(Product product)
+        {
+            _context.Update(product);
+        }
+
+
     }
 }

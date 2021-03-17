@@ -71,7 +71,10 @@ namespace TestingEFRelations.Repositories
 
             return true;
         }
-
+        public void CartUpdate(Cart cart)
+        {
+            _context.Update(cart);
+        }
         public async Task<bool> SaveCart()
         {
             return await _context.SaveChangesAsync() > 0;
@@ -83,6 +86,36 @@ namespace TestingEFRelations.Repositories
             cart.CartTotal = cart.CartProductQuantity * productItem.ProductPrice;
 
             return true;
+        }
+
+
+        public async Task<Cart> IncreaseProductQuantity(Cart cartID, int quantity)
+        {
+            //get the product Object inside cart with the existed cart product ID
+
+            var cart = await FindCart(cartID.ProductID);
+
+            var increasedQuantity = cart.CartProductQuantity += quantity;
+            //check if the increased quantity does NOT exceed the qunatity of the product.
+            if (increasedQuantity <= cart.Product.ProductQuantity)
+            {
+                cart.CartTotal = cart.CartProductQuantity * cart.Product.ProductPrice;
+
+                return cart;
+            }
+            cart.CartProductQuantity -= quantity;
+            return cart;
+        }
+        public async Task<Cart> FindCart(int? id)
+        {
+            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ProductID == id);
+
+            return cart;
+        }
+
+        public bool CartExists(int id)
+        {
+            return _context.Cart.Any(e => e.ID == id);
         }
     }
 }

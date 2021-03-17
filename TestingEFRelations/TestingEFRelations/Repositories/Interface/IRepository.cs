@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace TestingEFRelations.Repositories.Interface
 {
     public interface IRepository <T>
     {
-        Task<bool> HasSameItem(int? id);
-        Task<bool> DeleteSameItem(int? id);
-
-        double TotalAsync(double entityTotal, IEnumerable<T> entitySize);
+        //T GetById(int id);
+        //IEnumerable<T> GetAll();
+        //IEnumerable<T> Find(Expression<Func<T, bool>> expression);
+        //void Add(T entity);
+        //void AddRange(IEnumerable<T> entities);
+        //void Remove(T entity);
+        //void RemoveRange(IEnumerable<T> entities);
     }
 }

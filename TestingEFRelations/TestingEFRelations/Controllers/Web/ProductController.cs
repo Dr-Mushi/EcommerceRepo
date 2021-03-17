@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using TestingEFRelations.Data;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories;
 using TestingEFRelations.Repositories.Interface;
@@ -14,16 +9,13 @@ namespace TestingEFRelations.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IImageRepository _imageRepository;
+        private readonly IImageRepository _image;
         private readonly IProductRepository _product;
 
-        public ProductController(ApplicationDbContext context ,
-            IImageRepository imageRepository,
+        public ProductController(IImageRepository image,
             IProductRepository product)
         {
-            _context = context;
-            _imageRepository = imageRepository;
+            _image= image;
             _product = product;
         }
 
@@ -54,7 +46,7 @@ namespace TestingEFRelations.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
-            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName");
+            ViewData["SizeName"] = _product.SelectListSize();
             return View();
         }
 
@@ -68,15 +60,15 @@ namespace TestingEFRelations.Controllers
             if (ModelState.IsValid)
             {
                 //after adding the product, take the product object as it has the new product id and add it to the image
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                _product.AddProduct(product);
+                await _product.SaveProduct();
 
-                await _imageRepository.AddImage(product);
+                await _image.AddImage(product);
 
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = _product.SelectListSize();
             return View(product);
         }
 
@@ -88,12 +80,12 @@ namespace TestingEFRelations.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
+            var product = await _product.FindProduct(id);
             if (product == null)
             {
                 return NotFound();
             }
-            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = _product.SelectListSize();
             return View(product);
         }
 
@@ -113,12 +105,12 @@ namespace TestingEFRelations.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    _product.ProductUpdate(product);
+                    await _product.SaveProduct();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductID))
+                    if (!_product.ProductExists(product.ProductID))
                     {
                         return NotFound();
                     }
@@ -129,7 +121,7 @@ namespace TestingEFRelations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SizeName"] = new SelectList(_context.Size, "ID", "SizeName", product.SizeID);
+            ViewData["SizeName"] = _product.SelectListSize();
             return View(product);
         }
 
@@ -141,10 +133,7 @@ namespace TestingEFRelations.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .Include(p => p.ProductImage)
-                .Include(p => p.ProductSize)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            var product = await _product.FindProduct(id);
             if (product == null)
             {
                 return NotFound();
@@ -158,16 +147,12 @@ namespace TestingEFRelations.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
+            await _product.DeleteProduct(id);
+            await _product.SaveProduct();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
-        {
-            return _context.Product.Any(e => e.ProductID == id);
-        }
+
     }
 }
 

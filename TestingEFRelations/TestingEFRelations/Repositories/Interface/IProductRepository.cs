@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,12 @@ namespace TestingEFRelations.Repositories.Interface
         Task<bool> SaveProduct();
 
         Task<Product> FindProduct(int? id);
+        Task<bool> DeleteProduct(int? id);
+        SelectList SelectListSize();
 
+        bool ProductExists(int id);
+
+        public void ProductUpdate(Product product);
 
     }
 }

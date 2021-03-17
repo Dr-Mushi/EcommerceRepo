@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TestingEFRelations.Data;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories.Interface;
 
@@ -10,15 +8,12 @@ namespace TestingEFRelations.Controllers
 {
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IWishlistRepository _wishlistRepository;
+        private readonly IWishlistRepository _wishlist;
         private readonly ICartRepository _cart;
-        public CartController(ApplicationDbContext context,ICartRepository cart,
-            IWishlistRepository wishlistRepository
-            )
+        public CartController(ICartRepository cart,
+            IWishlistRepository wishlist)
         {
-            _context = context;
-            _wishlistRepository = wishlistRepository;
+            _wishlist = wishlist;
             _cart = cart;
         }
 
@@ -44,10 +39,12 @@ namespace TestingEFRelations.Controllers
                 await _cart.SetCartTotal(cart);
 
                 //if wishlist has the same item that was added to the cart, remove the item from the wishlist
-                if (await _wishlistRepository.HasSameItem(cart.ProductID))
+                if (await _wishlist.HasSameItem(cart.ProductID))
                 {
                     
-                    await _wishlistRepository.DeleteSameItem(cart.ProductID);
+                     await _wishlist.DeleteWishlist(cart.ProductID);
+
+                     await _wishlist.SaveWishlist();
 
                     //if cart has the same item that was created , increase the quantity of that item.
                     if (await _cart.HasSameItem(cart.ProductID))
@@ -101,12 +98,12 @@ namespace TestingEFRelations.Controllers
             {
                 try
                 {
-                    _context.Update(cart);
-                    await _context.SaveChangesAsync();
+                    _cart.CartUpdate(cart);
+                    await _cart.SaveCart();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CartExists(cart.ID))
+                    if (!_cart.CartExists(cart.ID))
                     {
                         return NotFound();
                     }
@@ -130,28 +127,13 @@ namespace TestingEFRelations.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CartExists(int id)
-        {
-            return _context.Cart.Any(e => e.ID == id);
-        }
-
         public async Task<bool> IncreaseProductQuantity(Cart cartID , int quantity)
         {
-            
-            //get the product Object inside cart with the existed cart product ID
-            var cart = await _context.Cart
-                .FirstOrDefaultAsync(m => m.ProductID == cartID.ProductID);
 
-            var increasedQuantity =  cart.CartProductQuantity += quantity;
-            //check if the increased quantity does NOT exceed the qunatity of the product.
-            if (increasedQuantity <= cart.Product.ProductQuantity)
-            {
-               //refresh the cart total after quantity increased
-                cart.CartTotal = cart.CartProductQuantity * cart.Product.ProductPrice;
-                await Edit(cart.ID, cart);
-                return true;
-            }
-            return false;
+            var cart = _cart.IncreaseProductQuantity(cartID, quantity);
+
+            await Edit(cart.Result.ID, cart.Result);
+            return true;
         }
     }
 }
@@ -273,3 +255,19 @@ namespace TestingEFRelations.Controllers
 
 //    return true;
 //}
+
+////get the product Object inside cart with the existed cart product ID
+//var cart = await _context.Cart
+//    .FirstOrDefaultAsync(m => m.ProductID == cartID.ProductID);
+
+//var increasedQuantity =  cart.CartProductQuantity += quantity;
+////check if the increased quantity does NOT exceed the qunatity of the product.
+//if (increasedQuantity <= cart.Product.ProductQuantity)
+//{
+//   //refresh the cart total after quantity increased
+//    cart.CartTotal = cart.CartProductQuantity * cart.Product.ProductPrice;
+//    await Edit(cart.ID, cart);
+//    return true;
+//}
+//return false;
+
