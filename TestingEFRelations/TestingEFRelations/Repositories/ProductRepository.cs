@@ -69,8 +69,14 @@ namespace TestingEFRelations.Repositories
 
         public void ProductUpdate(Product product)
         {
+
+            //for API
+            _context.Entry(product).State = EntityState.Modified;
+
             _context.Update(product);
         }
+
+
 
 
     }

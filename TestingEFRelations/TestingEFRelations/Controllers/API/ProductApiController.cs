@@ -24,57 +24,49 @@ namespace TestingEFRelations.Controllers
 
         // GET: api/ProductApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
-            var getAllItems = await _product.GetProductItems();
-            return Ok(getAllItems);
+            return Ok(await _product.GetProductItems());
+        }
+        //// GET: api/ProductApi/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            return Ok(await _product.FindProduct(id));
         }
 
-        //// GET: api/ProductApi/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Product>> GetProduct(int id)
-        //{
-        //    var product = await _context.Product.FindAsync(id);
-
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return product;
-        //}
 
         //// PUT: api/ProductApi/5
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for
         //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutProduct(int id, Product product)
-        //{
-        //    if (id != product.ProductID)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProduct(int id, Product product)
+        {
+            if (id != product.ProductID)
+            {
+                return BadRequest();
+            }
 
-        //    _context.Entry(product).State = EntityState.Modified;
+            _product.ProductUpdate(product);
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ProductExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            try
+            {
+                await _product.SaveProduct();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_product.ProductExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //    return NoContent();
-        //}
+            return Ok(product);
+        }
 
         //// POST: api/ProductApi
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -82,11 +74,12 @@ namespace TestingEFRelations.Controllers
         //[HttpPost]
         //public async Task<ActionResult<Product>> PostProduct(Product product)
         //{
-        //    _context.Product.Add(product);
-        //    await _context.SaveChangesAsync();
+        //   _product.AddProduct(product);
+        //    await _product.SaveProduct();
 
         //    return CreatedAtAction("GetProduct", new { id = product.ProductID }, product);
         //}
+
 
         //// DELETE: api/ProductApi/5
         //[HttpDelete("{id}")]
