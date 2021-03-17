@@ -20,8 +20,7 @@ namespace TestingEFRelations.Repositories
         }
         public void AddCart(Cart cart)
         {
-            _context.Cart.AddAsync(cart);
-
+            _context.Cart.Add(cart);
         }
 
         public double CartSumTotal(IEnumerable<Cart> cartItems)
@@ -48,7 +47,6 @@ namespace TestingEFRelations.Repositories
             var applicationDbContext = _context.Cart.Include(c => c.Product)
                .Include(r => r.Product.ProductSize)
                .Include(r => r.Product.ProductImage);
-
 
             var getAllCartItems = await applicationDbContext.ToListAsync();
 

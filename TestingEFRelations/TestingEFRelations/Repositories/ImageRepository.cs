@@ -53,6 +53,12 @@ namespace TestingEFRelations.Repositories
                 imageFolder = "Images/";
                 imageFolder += "PlaceholderImage.jpg";
                 string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+                image = new Image
+                {
+                    ProductID = product.ProductID,
+                    ImageName = imageFolder
+                };
+                _context.Add(image);
             }  
             await _context.SaveChangesAsync();
 

@@ -34,15 +34,18 @@ namespace TestingEFRelations
 
 
 
-            
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 
             //Repositories
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IWishlistRepository, WishlistRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IReceiptRepository, ReceiptRepository>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<IWishlistRepository, WishlistRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
+            services.AddTransient<ICartRepository, CartRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IReceiptRepository, ReceiptRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +76,7 @@ namespace TestingEFRelations
                     name: "default",
                     pattern: "{controller=Product}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
 
 
             });

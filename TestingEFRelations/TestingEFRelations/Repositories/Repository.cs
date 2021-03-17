@@ -13,12 +13,17 @@ namespace TestingEFRelations.Repositories
 
     public class Repository<T> : IRepository<T> where T : class, new()
     {
-        protected readonly ApplicationDbContext _context;
+        //protected readonly ApplicationDbContext _context;
 
-        public Repository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        //public Repository(ApplicationDbContext context)
+        //{
+        //    _context = context;
+        //}
+
+        //public async Task<T> Findsaas(Expression<Func<T, bool>> expression)
+        //{
+        //    return await _context.Set<T>().FirstOrDefaultAsync(expression);
+        //}
 
         //public void Add(T entity)
         //{

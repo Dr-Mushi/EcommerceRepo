@@ -6,7 +6,7 @@ using TestingEFRelations.Models;
 
 namespace TestingEFRelations.Repositories.Interface
 {
-    public interface ICartRepository
+    public interface ICartRepository/* : IRepository<Cart>*/
     {
         Task<bool> SetCartTotal(Cart cart);
         double CartSumTotal(IEnumerable<Cart> cartItems);

@@ -15,5 +15,6 @@ namespace TestingEFRelations.Repositories.Interface
         //void AddRange(IEnumerable<T> entities);
         //void Remove(T entity);
         //void RemoveRange(IEnumerable<T> entities);
+        //Task<T> Findsaas(Expression<Func<T, bool>> expression);
     }
 }
