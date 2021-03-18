@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,8 +44,6 @@ namespace TestingEFRelations.Repositories
 
         public async Task<bool> DeleteProduct(int? id) 
         {
-
-
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             return true;

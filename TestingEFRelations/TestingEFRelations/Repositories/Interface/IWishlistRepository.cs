@@ -8,7 +8,7 @@ namespace TestingEFRelations.Repositories.Interface
     {
 
         Task<bool> HasSameItem(int? id);
-        //Task<bool> DeleteSameItem(int? id);
+        Task<bool> DeleteSameItem(int? id);
 
         Task<bool> SetWishlistTotal(Wishlist wishlist);
         double WishlistSumTotal(IEnumerable<Wishlist> wishlistItems);

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +36,7 @@ namespace TestingEFRelations.Repositories
 
         public async Task<bool> DeleteWishlist(int id)
         {
-            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
+            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ID == id);
             _context.Wishlist.Remove(wishlist);
             return true;
         }
@@ -85,8 +84,18 @@ namespace TestingEFRelations.Repositories
             return true;
         }
 
+        public async Task<bool> DeleteSameItem(int? id)
+        {
+            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
+            _context.Wishlist.Remove(wishlist);
+            return true;
+        }
 
-         public async Task<bool> SetWishlistTotal(Wishlist wishlist)
+
+
+
+
+        public async Task<bool> SetWishlistTotal(Wishlist wishlist)
          {
             var productItem = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == wishlist.ProductID);
             wishlist.WishlistTotal = wishlist.WishlistProductQuantity * productItem.ProductPrice;
@@ -96,7 +105,7 @@ namespace TestingEFRelations.Repositories
 
         public async Task<Wishlist> FindWishlist(int? id)
         {
-            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
+            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ID == id);
 
             return wishlist;
         }
@@ -105,8 +114,10 @@ namespace TestingEFRelations.Repositories
         {
             //get the product Object inside wishlist with the existed wishlist product ID
 
-            var wishlist = await FindWishlist(wishlistID.ProductID);
-            
+            //var wishlist = await FindWishlist(wishlistID.ProductID);
+
+            var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == wishlistID.ProductID);
+
             var increasedQuantity = wishlist.WishlistProductQuantity += quantity;
             //check if the increased quantity does NOT exceed the qunatity of the product.
             if (increasedQuantity <= wishlist.Product.ProductQuantity)
@@ -123,6 +134,7 @@ namespace TestingEFRelations.Repositories
         {
             return _context.Wishlist.Any(e => e.ID == id);
         }
+
 
         //public async Task<bool> DeleteSameItem(int? id)
         //{

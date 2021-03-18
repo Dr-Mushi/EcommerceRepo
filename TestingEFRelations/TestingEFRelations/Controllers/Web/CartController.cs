@@ -45,7 +45,7 @@ namespace TestingEFRelations.Controllers
                 if (await _wishlist.HasSameItem(cart.ProductID))
                 {
                     
-                     await _wishlist.DeleteWishlist(cart.ProductID);
+                     await _wishlist.DeleteSameItem(cart.ProductID);
 
                      await _wishlist.SaveWishlist();
 

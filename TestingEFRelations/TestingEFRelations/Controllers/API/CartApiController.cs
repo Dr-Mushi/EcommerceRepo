@@ -35,7 +35,7 @@ namespace TestingEFRelations.Controllers.API
             return Ok(await _cart.FindCart(id));
         }
 
-        // POST: api/CartApi
+        // POST: api/<CartApi>
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -51,7 +51,7 @@ namespace TestingEFRelations.Controllers.API
                 if (await _wishlist.HasSameItem(cart.ProductID))
                 {
                     
-                     await _wishlist.DeleteWishlist(cart.ProductID);
+                     await _wishlist.DeleteSameItem(cart.ProductID);
 
                      await _wishlist.SaveWishlist();
 
@@ -72,14 +72,14 @@ namespace TestingEFRelations.Controllers.API
         }
 
         // PUT api/<CartApi>/5
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
         public async Task<IActionResult> PutCart(int id, [Bind("ID,ProductID,CartProductQuantity")] Cart cart)
         {
             if (id != cart.ID)
             {
                 return BadRequest();
             }
-            await _cart.SetCartTotal(cart);
+
             _cart.CartUpdate(cart);
 
             try

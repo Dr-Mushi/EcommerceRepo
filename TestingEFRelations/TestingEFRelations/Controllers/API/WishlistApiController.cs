@@ -43,12 +43,12 @@ namespace TestingEFRelations.Controllers.API
                 if (await _wishlist.HasSameItem(wishlist.ProductID))
                 {
                     await IncreaseProductQuantity(wishlist, wishlist.WishlistProductQuantity);
-                    return Ok(GetWishlist(wishlist.ProductID).Result);
+                    return Ok(GetWishlist(wishlist.ProductID));
 
                 }
                 _wishlist.AddWishlist(wishlist);
                 await _wishlist.SaveWishlist();
-                return Ok(GetWishlist(wishlist.ProductID).Result);
+                return Ok(GetWishlist(wishlist.ProductID));
             }
             return BadRequest();
         }
@@ -57,7 +57,7 @@ namespace TestingEFRelations.Controllers.API
         // PUT api/<WishlistApi>/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
        
         public async Task<IActionResult> PutWishlist(int id, [Bind("ID,ProductID,WishlistProductQuantity")] Wishlist wishlist)
         {
@@ -70,7 +70,6 @@ namespace TestingEFRelations.Controllers.API
             {
                 try
                 {
-                    await _wishlist.SetWishlistTotal(wishlist);
                     _wishlist.WishlistUpdate(wishlist);
                     await _wishlist.SaveWishlist();
                 }

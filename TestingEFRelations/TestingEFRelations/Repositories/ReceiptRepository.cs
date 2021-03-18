@@ -37,7 +37,7 @@ namespace TestingEFRelations.Repositories
 
         public async Task<bool> DeleteReceipt(int id)
         {
-            var receipt = await _context.Receipt.FirstOrDefaultAsync(m => m.ProductID == id);
+            var receipt = await _context.Receipt.FirstOrDefaultAsync(m => m.ID == id);
             _context.Receipt.Remove(receipt);
             return true;
         }

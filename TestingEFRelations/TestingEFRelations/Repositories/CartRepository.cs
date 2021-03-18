@@ -37,7 +37,7 @@ namespace TestingEFRelations.Repositories
 
         public async Task<bool> DeleteCart(int id)
         {
-            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ProductID == id);
+            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ID == id);
             _context.Cart.Remove(cart);
             return true;
         }
@@ -91,7 +91,10 @@ namespace TestingEFRelations.Repositories
         {
             //get the product Object inside cart with the existed cart product ID
 
-            var cart = await FindCart(cartID.ProductID);
+            //var cart = await FindCart(cartID.ProductID);
+            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ProductID == cartID.ProductID);
+
+
 
             var increasedQuantity = cart.CartProductQuantity += quantity;
             //check if the increased quantity does NOT exceed the qunatity of the product.
@@ -106,7 +109,7 @@ namespace TestingEFRelations.Repositories
         }
         public async Task<Cart> FindCart(int? id)
         {
-            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ProductID == id);
+            var cart = await _context.Cart.FirstOrDefaultAsync(m => m.ID == id);
 
             return cart;
         }
