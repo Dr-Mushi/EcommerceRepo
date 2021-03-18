@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TestingEFRelations.Data;
 using TestingEFRelations.Repositories.Interface;
+using AutoMapper;
+using System;
 
 namespace TestingEFRelations
 {
@@ -36,6 +38,9 @@ namespace TestingEFRelations
             //for API handling deep tree branches
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //Auto mapper for DTO
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
             //Repositories
