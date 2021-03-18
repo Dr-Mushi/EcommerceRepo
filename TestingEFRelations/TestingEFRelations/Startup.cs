@@ -33,7 +33,7 @@ namespace TestingEFRelations
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
 
-
+            //for API handling deep tree branches
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -66,7 +66,7 @@ namespace TestingEFRelations
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            //app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
 using TestingEFRelations.Models;
+using TestingEFRelations.Repositories;
 using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
@@ -15,10 +16,12 @@ namespace TestingEFRelations.Controllers
     [ApiController]
     public class ProductApiController : ControllerBase
     {
+        private readonly IImageRepository _image;
         private readonly IProductRepository _product;
 
-        public ProductApiController(IProductRepository product)
+        public ProductApiController(IImageRepository image, IProductRepository product)
         {
+            _image = image;
             _product = product;
         }
 
@@ -68,18 +71,26 @@ namespace TestingEFRelations.Controllers
             return Ok(product);
         }
 
-        //// POST: api/ProductApi
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPost]
-        //public async Task<ActionResult<Product>> PostProduct(Product product)
-        //{
-        //   _product.AddProduct(product);
-        //    await _product.SaveProduct();
+        // POST: api/ProductApi
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost]
+        public async Task<IActionResult> PostProduct([FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _product.AddProduct(product);
+                await _product.SaveProduct();
 
-        //    return CreatedAtAction("GetProduct", new { id = product.ProductID }, product);
-        //}
+                //BAD LOGIC <the product is saved first then the image will be inserted,
+                //which will be bad if the project stopped for some reason 
+                //before the image was added>.
+                await _image.AddImage(product);
 
+                return Ok(product);
+            }
+            return BadRequest();
+        }
 
         //// DELETE: api/ProductApi/5
         //[HttpDelete("{id}")]
