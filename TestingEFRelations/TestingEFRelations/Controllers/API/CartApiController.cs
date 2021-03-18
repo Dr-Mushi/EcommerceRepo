@@ -23,14 +23,14 @@ namespace TestingEFRelations.Controllers.API
         }
         // GET: api/<CartApi>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cart>>> GetAllCarts()
+        public async Task<ActionResult> GetAllCarts()
         {
             return Ok(await _cart.GetCartItems());
         }
 
         // GET api/<CartApi>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cart>> GetCart(int id)
+        public async Task<ActionResult> GetCart(int id)
         {
             return Ok(await _cart.FindCart(id));
         }
@@ -39,7 +39,7 @@ namespace TestingEFRelations.Controllers.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Cart>> PostCart([Bind("ID,ProductID,CartProductQuantity")]  Cart cart)
+        public async Task<ActionResult> PostCart([Bind("ID,ProductID,CartProductQuantity")]  Cart cart)
         {
 
             if (ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace TestingEFRelations.Controllers.API
 
         // DELETE: api/CartApi/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Cart>> DeleteCart(int id)
+        public async Task<ActionResult> DeleteCart(int id)
         {
             await _cart.DeleteCart(id);
            return Ok(await _cart.SaveCart());      

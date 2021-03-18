@@ -24,13 +24,13 @@ namespace TestingEFRelations.Controllers
 
         // GET: api/ProductApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        public async Task<ActionResult> GetAllProducts()
         {
             return Ok(await _product.GetProductItems());
         }
         //// GET: api/ProductApi/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult> GetProduct(int id)
         {
             return Ok(await _product.FindProduct(id));
         }

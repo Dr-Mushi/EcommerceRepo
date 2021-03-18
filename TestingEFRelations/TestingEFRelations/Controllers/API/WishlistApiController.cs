@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories.Interface;
@@ -21,13 +17,13 @@ namespace TestingEFRelations.Controllers.API
         }
         // GET api/<WishlistApi>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Wishlist>>> GetAllWishlists()
+        public async Task<ActionResult> GetAllWishlists()
         {
             return Ok(await _wishlist.GetWishlistItems());
         }
         // GET api/<WishlistApi>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Wishlist>>> GetWishlist(int id)
+        public async Task<ActionResult> GetWishlist(int id)
         {
             return Ok(await _wishlist.FindWishlist(id));
         }
@@ -36,7 +32,7 @@ namespace TestingEFRelations.Controllers.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Wishlist>> PostWishlist([Bind("ID,ProductID,CartProductQuantity")] Wishlist wishlist)
+        public async Task<ActionResult> PostWishlist([Bind("ID,ProductID,CartProductQuantity")] Wishlist wishlist)
         {
 
             if (ModelState.IsValid)
@@ -96,7 +92,7 @@ namespace TestingEFRelations.Controllers.API
 
         // DELETE api/<WishlistApi>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Cart>> DeleteCart(int id)
+        public async Task<ActionResult> DeleteCart(int id)
         {
             await _wishlist.DeleteWishlist(id);
             return Ok(await _wishlist.SaveWishlist());

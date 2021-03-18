@@ -23,7 +23,7 @@ namespace TestingEFRelations.Controllers.API
         }
 
         // GET: Receipt
-        public async Task<ActionResult<IEnumerable<Receipt>>> GetReceipt()
+        public async Task<ActionResult> GetReceipt()
         {
             return Ok(await _receipt.GetReceiptItems());
         }
@@ -46,7 +46,7 @@ namespace TestingEFRelations.Controllers.API
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Cart>> DeleteReceipt(int id)
+        public async Task<ActionResult> DeleteReceipt(int id)
         {
             await _receipt.DeleteReceipt(id);
             return Ok(await _receipt.SaveReceipt());
