@@ -27,8 +27,8 @@
 
                 <p class="card-text">@Html.DisplayFor(modelItem => item.ProductPrice)$</p>
 
-                <a asp-controller="ProductApi" asp-action="@item.ProductID" class="card-text">Click me for API!</a>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
+                <a asp-controller="Api" asp-action="ProductApi" asp-route-id="@item.ProductID" class="card-text">Click me for API!</a>
+                |<a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a>
 
 
 
