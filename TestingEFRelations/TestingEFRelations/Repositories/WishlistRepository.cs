@@ -40,7 +40,6 @@ namespace TestingEFRelations.Repositories
             var wishlist = await _context.Wishlist.FirstOrDefaultAsync(m => m.ProductID == id);
             _context.Wishlist.Remove(wishlist);
             return true;
-
         }
         
         public void WishlistUpdate(Wishlist wishlist)
