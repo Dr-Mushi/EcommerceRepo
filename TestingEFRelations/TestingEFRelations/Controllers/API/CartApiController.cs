@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories.Interface;
@@ -15,47 +13,73 @@ namespace TestingEFRelations.Controllers.API
     [ApiController]
     public class CartApiController : ControllerBase
     {
+        private readonly IWishlistRepository _wishlist;
         private readonly ICartRepository _cart;
-
-        public CartApiController(ICartRepository cart)
+        public CartApiController(ICartRepository cart,
+            IWishlistRepository wishlist)
         {
+            _wishlist = wishlist;
             _cart = cart;
         }
-        // GET: api/<CartApiController>
+        // GET: api/<CartApi>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart>>> GetAllCarts()
         {
             return Ok(await _cart.GetCartItems());
         }
 
-        // GET api/<CartApiController>/5
+        // GET api/<CartApi>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cart>> GetCart(int id)
         {
             return Ok(await _cart.FindCart(id));
         }
 
-        // POST: api/CartApiController
+        // POST: api/CartApi
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Cart>> PostProduct(Cart cart)
+        public async Task<ActionResult<Cart>> PostCart([Bind("ID,ProductID,CartProductQuantity")]  Cart cart)
         {
-            _cart.AddCart(cart);
-            await _cart.SaveCart();
 
-            return CreatedAtAction("GetProduct", new { id = cart.ProductID }, cart);
+            if (ModelState.IsValid)
+            {
+                await _cart.SetCartTotal(cart);
+
+                //BAD LOGIC
+                //if wishlist has the same item that was added to the cart, remove the item from the wishlist
+                if (await _wishlist.HasSameItem(cart.ProductID))
+                {
+                    
+                     await _wishlist.DeleteWishlist(cart.ProductID);
+
+                     await _wishlist.SaveWishlist();
+
+                }
+
+                //if cart has the same item that was created, increase the quantity of that item.
+                if (await _cart.HasSameItem(cart.ProductID))
+                {
+                    await IncreaseProductQuantity(cart, cart.CartProductQuantity);
+                    return Ok(GetCart(cart.ProductID).Result);
+                }
+
+                _cart.AddCart(cart);
+                await _cart.SaveCart();
+                return Ok(GetCart(cart.ProductID).Result);
+            }
+            return BadRequest();
         }
 
-        // PUT api/<CartApiController>/5
+        // PUT api/<CartApi>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCart(int id, Cart cart)
+        public async Task<IActionResult> PutCart(int id, [Bind("ID,ProductID,CartProductQuantity")] Cart cart)
         {
-            if (id != cart.ProductID)
+            if (id != cart.ID)
             {
                 return BadRequest();
             }
-
+            await _cart.SetCartTotal(cart);
             _cart.CartUpdate(cart);
 
             try
@@ -77,19 +101,23 @@ namespace TestingEFRelations.Controllers.API
             return Ok(cart);
         }
 
-        //// DELETE api/<CartApiController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //     Ok(_cart.DeleteCart(id));
-        //}
-
-        // DELETE: api/ProductApi/5
+        // DELETE: api/CartApi/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Cart>> DeleteCart(int id)
         {
             await _cart.DeleteCart(id);
            return Ok(await _cart.SaveCart());      
+        }
+
+
+
+        public async Task<bool> IncreaseProductQuantity(Cart cartID, int quantity)
+        {
+
+            var cart = _cart.IncreaseProductQuantity(cartID, quantity);
+
+            await PutCart(cart.Result.ID, cart.Result);
+            return true;
         }
     }
 }

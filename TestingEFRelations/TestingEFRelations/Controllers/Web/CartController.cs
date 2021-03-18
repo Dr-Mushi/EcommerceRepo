@@ -38,6 +38,9 @@ namespace TestingEFRelations.Controllers
             {
                 await _cart.SetCartTotal(cart);
 
+
+                //BAD LOGIC <if you click on add wishlist then add cart for the same item
+                //it will go to wishlist and remove the item>
                 //if wishlist has the same item that was added to the cart, remove the item from the wishlist
                 if (await _wishlist.HasSameItem(cart.ProductID))
                 {
