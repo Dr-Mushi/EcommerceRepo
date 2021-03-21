@@ -15,6 +15,8 @@ namespace TestingEFRelations.Profiles
             //source --> destination
             CreateMap<Product, ProductReadDto>();
             CreateMap<ProductCreateDto, Product>();
+            CreateMap<ProductUpdateDto,Product>();
+            CreateMap<Product, ProductUpdateDto>();
         }
     }
 }

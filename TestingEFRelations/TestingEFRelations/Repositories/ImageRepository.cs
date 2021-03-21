@@ -25,7 +25,7 @@ namespace TestingEFRelations.Repositories
             Image image;
  
             //if the input has value create a new image file
-            if (product.ImageFile != null)
+            if (product.ImageFile.Count > 0 )
             {
                 foreach (var item in product.ImageFile)
                 {

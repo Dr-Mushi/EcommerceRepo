@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TestingEFRelations.Models;
-
 namespace TestingEFRelations.Dtos.ProductDto
 {
-    public class ProductCreateDto
+    public class ProductUpdateDto
     {
         //public int ProductID { get; set; }
         [Required]

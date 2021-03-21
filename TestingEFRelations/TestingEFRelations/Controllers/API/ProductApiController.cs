@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
@@ -50,38 +51,6 @@ namespace TestingEFRelations.Controllers
         }
 
 
-        //// PUT: api/ProductApi/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
-        {
-            if (id != product.ProductID)
-            {
-                return BadRequest();
-            }
-
-            _product.ProductUpdate(product);
-
-            try
-            {
-                await _product.SaveProduct();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_product.ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Ok(product);
-        }
-
         // POST: api/ProductApi
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -101,10 +70,101 @@ namespace TestingEFRelations.Controllers
 
 
                 var productRead = _mapper.Map<ProductReadDto>(productCreate);
-                return CreatedAtRoute(nameof(GetProduct) , new {Id = productRead.ProductID } , productRead);
+                return CreatedAtRoute(nameof(GetProduct), new { Id = productRead.ProductID }, productRead);
             }
             return BadRequest();
         }
+
+
+
+        //// PUT: api/ProductApi/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutProduct(int id, [FromForm] [Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] ProductUpdateDto product)
+        {
+            var getProduct =await _product.FindProduct(id);
+
+            if (getProduct == null)
+            {
+                return BadRequest();
+            }
+
+            //No image will be updated only content
+             _mapper.Map(product, getProduct);
+
+            //no need for this, but when we don't need a mapper it's a good
+            //practice to have the update method ready
+            _product.ProductUpdate(getProduct);
+
+            try
+            {
+                await _product.SaveProduct();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_product.ProductExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchProduct(int id, [FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")]JsonPatchDocument<ProductUpdateDto> patchDoc)
+        {
+            if (ModelState.IsValid)
+            {
+                var getProduct = await _product.FindProduct(id);
+
+                if (getProduct == null)
+                {
+                    return BadRequest();
+                }
+                var productToPatch = _mapper.Map<ProductUpdateDto>(getProduct);
+
+                patchDoc.ApplyTo(productToPatch,ModelState);
+
+                if (!TryValidateModel(productToPatch))
+                {
+                    return ValidationProblem(ModelState);
+                }
+
+                //No image will be updated only content
+                _mapper.Map(productToPatch, getProduct);
+
+                //no need for this, but when we don't need a mapper it's a good
+                //practice to have the update method ready
+                _product.ProductUpdate(getProduct);
+
+                try
+                {
+                    await _product.SaveProduct();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_product.ProductExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+
+            }
+            return NoContent();
+        }
+
+
 
         //// DELETE: api/ProductApi/5
         //[HttpDelete("{id}")]

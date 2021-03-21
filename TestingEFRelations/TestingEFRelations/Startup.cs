@@ -11,6 +11,7 @@ using TestingEFRelations.Data;
 using TestingEFRelations.Repositories.Interface;
 using AutoMapper;
 using System;
+using Newtonsoft.Json.Serialization;
 
 namespace TestingEFRelations
 {
@@ -37,7 +38,12 @@ namespace TestingEFRelations
 
             //for API handling deep tree branches
             services.AddControllers().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            }
+            );
+            
 
             //Auto mapper for DTO
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
