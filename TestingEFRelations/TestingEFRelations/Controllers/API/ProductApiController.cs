@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
-using TestingEFRelations.Dtos;
+using TestingEFRelations.Dtos.ProductDto;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories;
 using TestingEFRelations.Repositories.Interface;
@@ -37,7 +37,7 @@ namespace TestingEFRelations.Controllers
             return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(getProductItems));
         }
         //// GET: api/ProductApi/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetProduct") ]
         public async Task<ActionResult<ProductReadDto>> GetProduct(int id)
         {
             var getProduct = await _product.FindProduct(id);
@@ -86,19 +86,22 @@ namespace TestingEFRelations.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<IActionResult> PostProduct([FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] Product product)
+        public async Task<ActionResult<ProductReadDto>> PostProduct([FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] ProductCreateDto product)
         {
             if (ModelState.IsValid)
             {
-                _product.AddProduct(product);
+                var productCreate = _mapper.Map<Product>(product);
+                _product.AddProduct(productCreate);
                 await _product.SaveProduct();
 
                 //BAD LOGIC <the product is saved first then the image will be inserted,
                 //which will be bad if the project stopped for some reason 
                 //before the image was added>.
-                await _image.AddImage(product);
+                await _image.AddImage(productCreate);
 
-                return Ok(product);
+
+                var productRead = _mapper.Map<ProductReadDto>(productCreate);
+                return CreatedAtRoute(nameof(GetProduct) , new {Id = productRead.ProductID } , productRead);
             }
             return BadRequest();
         }

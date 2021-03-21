@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestingEFRelations.Dtos;
+using TestingEFRelations.Dtos.ProductDto;
 using TestingEFRelations.Models;
 
 namespace TestingEFRelations.Profiles
@@ -12,7 +12,9 @@ namespace TestingEFRelations.Profiles
     {
         public ProductProfile()
         {
+            //source --> destination
             CreateMap<Product, ProductReadDto>();
+            CreateMap<ProductCreateDto, Product>();
         }
     }
 }
