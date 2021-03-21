@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Data;
+using TestingEFRelations.Dtos;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories;
 using TestingEFRelations.Repositories.Interface;
@@ -18,24 +18,35 @@ namespace TestingEFRelations.Controllers
     {
         private readonly IImageRepository _image;
         private readonly IProductRepository _product;
+        private readonly IMapper _mapper;
 
-        public ProductApiController(IImageRepository image, IProductRepository product)
+        public ProductApiController(IImageRepository image,
+            IProductRepository product,
+            IMapper mapper)
         {
             _image = image;
             _product = product;
+            _mapper = mapper;
         }
 
         // GET: api/ProductApi
         [HttpGet]
-        public async Task<ActionResult> GetAllProducts()
+        public async Task<ActionResult<IEnumerable<ProductReadDto>>> GetAllProducts()
         {
-            return Ok(await _product.GetProductItems());
+            var getProductItems = await _product.GetProductItems();
+            return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(getProductItems));
         }
         //// GET: api/ProductApi/5
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetProduct(int id)
+        public async Task<ActionResult<ProductReadDto>> GetProduct(int id)
         {
-            return Ok(await _product.FindProduct(id));
+            var getProduct = await _product.FindProduct(id);
+            if (getProduct != null)
+            {
+                return Ok(_mapper.Map<ProductReadDto>(getProduct));
+                
+            }
+            return NotFound();
         }
 
 
