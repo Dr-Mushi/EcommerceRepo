@@ -34,9 +34,10 @@ namespace TestingEFRelations
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddHttpClient();
 
 
-            //for API handling deep tree branches
+            //for API handling deep tree branches and Patch requests
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
