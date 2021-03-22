@@ -11,44 +11,99 @@ using System.Text.Json;
 
 namespace TestingEFRelations.Controllers.Consume
 {
-    public class ProductConsumeController
+    public class ProductConsumeController : Controller
     {
         IHttpClientFactory _clientFactory;
+        IEnumerable<Product> product;
+        string errorMessage;
 
         public ProductConsumeController(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
         }
 
-        public async Task<IEnumerable<Product>> Index()
-        
+        public async Task<ActionResult<IEnumerable<Product>>> Index()
         {
-            //var url = "https://localhost:44324/api/ProductApi";
-            //var httpClient = new HttpClient();
-            //var response = await httpClient.GetAsync(url);
-            //var result =  await response.Content.ReadAsStringAsync();
+            //this is another way to get the api
+            HttpClient client = _clientFactory.CreateClient();
 
-            //return result;
+            try
+            {
 
-            var request = new HttpRequestMessage(HttpMethod.Get,
-                "https://localhost:44324/api/ProductApi");
+                product = await client.GetFromJsonAsync<IEnumerable<Product>>("https://localhost:44324/api/ProductApis");
+                errorMessage = null;
+            }
+            catch(Exception ex)
+            {
+                errorMessage = $"There was an error getting products : ({ex.Message})";
+            }
+            @ViewData["errorMessage"] = errorMessage;
+            return View(product);
 
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            //This is one way to do it.
+            //HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
+            //    "https://localhost:44324/api/ProductApis");
 
-            var response = await client.SendAsync(request);
+            //HttpClient client = _clientFactory.CreateClient();
+
+            //HttpResponseMessage response = await client.SendAsync(request);
 
             //if (response.IsSuccessStatusCode)
             //{
-            //var responseStream =await response.Content.ReadAsStreamAsync();
-            //IEnumerable<Product> product = await JsonSerializer.DeserializeAsync<IEnumerable<Product>>(responseStream);
-            //var product = await response.Content.ReadFromJsonAsync<IEnumerable<Product>>();
-
-            var product = await response.Content.ReadFromJsonAsync<IEnumerable<Product>>();
+            //     product = await response.Content.ReadFromJsonAsync<IEnumerable<Product>>();
+            //    errorMessage = null;
             //}
-            return product;
+            //else
+            //{
+            //    //product = new List<Product>();
+            //    errorMessage = "there was an error getting products.";
+            //}
 
+            //ViewData["errorMessage"] = errorMessage;
+            //return View(product);
         }
+
+
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//var url = "https://localhost:44324/api/ProductApi";
+//var httpClient = new HttpClient();
+//var response = await httpClient.GetAsync(url);
+//var result =  await response.Content.ReadAsStringAsync();
+
+//return result;
+
+
+//var url = "https://localhost:44324/api/ProductApi";
+//var httpClient = new HttpClient();
+//var response = await httpClient.GetAsync(url);
+//var result =  await response.Content.ReadAsStringAsync();
+
+//return result;
+
+//}
+
+
+//client.DefaultRequestHeaders.Accept.Add(
+//    new MediaTypeWithQualityHeaderValue("application/jsons"));
