@@ -33,7 +33,8 @@ namespace TestingEFRelations.Repositories
         public async Task<SignInResult> SignIn(SignIn signIn)
         {
             string user = signIn.EmailOrName;
-            if (await _userManager.FindByNameAsync(user) == null)
+            //if the username is null and the email is not, find the username from user email
+            if (await _userManager.FindByNameAsync(user) == null && await _userManager.FindByEmailAsync(user) != null)
             {
                  var userEmail = await _userManager.FindByEmailAsync(user);
                 var userLogIn = await _signInManager.PasswordSignInAsync(userEmail.UserName, signIn.Password, signIn.RememberMe, false);

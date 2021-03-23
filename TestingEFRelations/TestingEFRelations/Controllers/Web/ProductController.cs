@@ -9,6 +9,7 @@ using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
+   
     public class ProductController : Controller
     {
         private readonly IImageRepository _image;
