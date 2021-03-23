@@ -28,24 +28,8 @@
 
                     <p class="card-text">@Html.DisplayFor(modelItem => item.ProductPrice)$</p>
 
-                    <a asp-controller="Api" asp-action="ProductApi" asp-route-id="@item.ProductID" class="card-text">Click me for API!</a>
                     |<a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a>
 
-
-
-                    <div class="row">
-                        <form asp-controller="Cart" asp-action="Create" method="post" class="mr-1">
-                            <input name="ProductID" type="hidden" value="@item.ProductID" />
-                            <input name="CartProductQuantity" type="hidden" value="1" />
-                            <input type="submit" value="Add to Cart" class="btn btn-primary" />
-                        </form>
-
-                        <form asp-controller="Wishlist" asp-action="Create" method="post">
-                            <input name="ProductID" type="hidden" value="@item.ProductID" />
-                            <input name="WishlistProductQuantity" type="hidden" value="1" />
-                            <input type="submit" value="Wishlist" class="btn btn-primary" />
-                        </form>
-                    </div>
                 </div>
             </div>
 

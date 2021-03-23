@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TestingEFRelations.Models
@@ -44,7 +45,15 @@ namespace TestingEFRelations.Models
 
         [Display(Name = "Choose product images")]
         [NotMapped]
+        [JsonIgnore]
         public List<IFormFile> ImageFile { get; set; }
+
+        [NotMapped]
+        public string ImageFileName { get; set; }
+        [NotMapped]
+        public string ImageFileExtension { get; set; }
+        [NotMapped]
+        public string ImageFileData { get; set; }
 
     }
 }

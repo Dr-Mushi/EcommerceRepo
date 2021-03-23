@@ -55,7 +55,7 @@ namespace TestingEFRelations.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ProductReadDto>> PostProduct([FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] ProductCreateDto product)
+        public async Task<ActionResult<ProductReadDto>> PostProduct([FromBody]/*[Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] */ProductCreateDto product)
         {
             if (ModelState.IsValid)
             {

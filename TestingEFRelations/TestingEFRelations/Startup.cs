@@ -34,13 +34,24 @@ namespace TestingEFRelations
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
+
+
+
+            //for API consuming
             services.AddHttpClient();
+            services.AddHttpClient("Ecommerce", c => {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("EcommerceAPI"));
+            });
+
 
 
             //for API handling deep tree branches and Patch requests
             services.AddControllers().AddNewtonsoftJson(options =>
             {
+                //Deep tree branches
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+                //PATCH
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             }
             );

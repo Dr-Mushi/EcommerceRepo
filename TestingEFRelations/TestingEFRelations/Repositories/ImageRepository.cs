@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using TestingEFRelations.Data;
 using TestingEFRelations.Models;
@@ -23,27 +24,86 @@ namespace TestingEFRelations.Repositories
             //image path
             string imageFolder;
             Image image;
- 
-            //if the input has value create a new image file
-            if (product.ImageFile.Count > 0 )
+
+
+            //if (product.ImageFile.Count > 0)
+            //{
+            //    foreach (var item in product.ImageFile)
+            //    {
+            //        byte[] bytes = Convert.FromBase64String(item);
+            //        imageFolder = "Images/";
+            //        imageFolder += Guid.NewGuid().ToString() + "_" + item;
+            //        //combine server path with the image name
+            //        string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+
+            //        if (bytes.Length > 0)
+            //        {
+            //            using (var stream = new FileStream(serverFolder, FileMode.Create))
+            //            {
+            //                stream.Write(bytes, 0, bytes.Length);
+            //                stream.Flush();
+            //            }
+            //        }
+
+            //        image = new Image
+            //        {
+            //            ProductID = product.ProductID,
+            //            ImageName = imageFolder
+            //        };
+            //        _context.Add(image);
+            //    }
+            //}
+
+
+
+            //await _context.SaveChangesAsync();
+
+            //return true;
+
+
+
+
+            if (product.ImageFileName != null)
             {
-                foreach (var item in product.ImageFile)
+                imageFolder = "Images/";
+                imageFolder += Guid.NewGuid().ToString() + "_" + product.ImageFileExtension;
+                string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+                byte[] stringToByte = Convert.FromBase64String(product.ImageFileData);
+                await File.WriteAllBytesAsync(serverFolder, stringToByte);
+
+                image = new Image
                 {
-                    imageFolder = "Images/";
-                    imageFolder += Guid.NewGuid().ToString() + "_" + item.FileName;
-                    //combine server path with the image name
-                    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
-                    //Create new image
-                    await item.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                    //add new image to image table
-                     image = new Image
-                    {
-                        ProductID = product.ProductID,
-                        ImageName = imageFolder
-                    };
-                    _context.Add(image);
-                }
+                    ProductID = product.ProductID,
+                    ImageName = imageFolder
+                };
+                _context.Add(image);
+
+                await _context.SaveChangesAsync();
+
+                return true;
             }
+
+
+            //if the input has value create a new image file
+            if (product.ImageFile.Count > 0)
+                {
+                    foreach (var item in product.ImageFile)
+                    {
+                        imageFolder = "Images/";
+                        imageFolder += Guid.NewGuid().ToString() + "_" + item.FileName;
+                        //combine server path with the image name
+                        string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+                        //Create new image
+                        await item.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                        //add new image to image table
+                        image = new Image
+                        {
+                            ProductID = product.ProductID,
+                            ImageName = imageFolder
+                        };
+                        _context.Add(image);
+                    }
+                }
             //create a placeholder if the user didn't insert an image
             else
             {
@@ -56,12 +116,13 @@ namespace TestingEFRelations.Repositories
                     ImageName = imageFolder
                 };
                 _context.Add(image);
-            }  
+            }
             await _context.SaveChangesAsync();
 
             return true;
         }
     }
+
 }
 
 

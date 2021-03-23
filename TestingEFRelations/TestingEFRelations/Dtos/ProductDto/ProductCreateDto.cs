@@ -43,5 +43,12 @@ namespace TestingEFRelations.Dtos.ProductDto
         [Display(Name = "Choose product images")]
         [NotMapped]
         public List<IFormFile> ImageFile { get; set; }
+
+        [NotMapped]
+        public string ImageFileName { get; set; }
+        [NotMapped]
+        public string ImageFileExtension { get; set; }
+        [NotMapped]
+        public string ImageFileData { get; set; }
     }
 }
