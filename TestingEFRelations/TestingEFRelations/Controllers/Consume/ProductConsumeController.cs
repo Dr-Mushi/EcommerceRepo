@@ -104,17 +104,36 @@ namespace TestingEFRelations.Controllers.Consume
             //@ViewData["errorMessage"] = errorMessage;
             //return View(nameof(Index));
 
-            foreach (var item in product.ImageFile)
+            //for one image upload
+            //foreach (var item in product.ImageFile)
+            //{
+            //    product.ImageFileName = item.FileName;
+            //    product.ImageFileExtension = Path.GetExtension(item.FileName);
+            //    if(item.Length > 0)
+            //    {
+            //        using(var ms = new MemoryStream())
+            //        {
+            //           await item.CopyToAsync(ms);
+            //            byte[] fileBytes = ms.ToArray();
+            //            product.ImageFileData = Convert.ToBase64String(fileBytes);
+            //        }
+            //    }
+            //}
+            product.ImageFileName = new List<string>();
+            product.ImageFileExtension = new List<string>();
+            product.ImageFileData = new List<string>();
+            //for multiple images upload
+            for (int i  = 0; i < product.ImageFile.Count; i++)
             {
-                product.ImageFileName = item.FileName;
-                product.ImageFileExtension = Path.GetExtension(item.FileName);
-                if(item.Length > 0)
+                product.ImageFileName.Add(product.ImageFile[i].FileName);
+                product.ImageFileExtension.Add(Path.GetExtension(product.ImageFile[i].FileName));
+                if (product.ImageFile[i].Length > 0)
                 {
-                    using(var ms = new MemoryStream())
+                    using (var ms = new MemoryStream())
                     {
-                       await item.CopyToAsync(ms);
+                        await product.ImageFile[i].CopyToAsync(ms);
                         byte[] fileBytes = ms.ToArray();
-                        product.ImageFileData = Convert.ToBase64String(fileBytes);
+                        product.ImageFileData.Add(Convert.ToBase64String(fileBytes));
                     }
                 }
             }

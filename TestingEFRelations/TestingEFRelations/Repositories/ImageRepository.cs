@@ -63,27 +63,48 @@ namespace TestingEFRelations.Repositories
 
 
 
+            //if (product.ImageFileName != null)
+            //{
+            //    imageFolder = "Images/";
+            //    imageFolder += Guid.NewGuid().ToString() + "_" + product.ImageFileExtension;
+            //    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+            //    byte[] stringToByte = Convert.FromBase64String(product.ImageFileData);
+            //    await File.WriteAllBytesAsync(serverFolder, stringToByte);
+
+            //    image = new Image
+            //    {
+            //        ProductID = product.ProductID,
+            //        ImageName = imageFolder
+            //    };
+            //    _context.Add(image);
+
+            //    await _context.SaveChangesAsync();
+
+            //    return true;
+            //}
+
+            //Images sent from API
             if (product.ImageFileName != null)
             {
-                imageFolder = "Images/";
-                imageFolder += Guid.NewGuid().ToString() + "_" + product.ImageFileExtension;
-                string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
-                byte[] stringToByte = Convert.FromBase64String(product.ImageFileData);
-                await File.WriteAllBytesAsync(serverFolder, stringToByte);
-
-                image = new Image
-                {
-                    ProductID = product.ProductID,
-                    ImageName = imageFolder
-                };
-                _context.Add(image);
-
+               for (int i = 0; i < product.ImageFileName.Count; i++)
+               {
+                   //imageFolder = "Images/";
+                   imageFolder = "Images/"+ Guid.NewGuid().ToString() + "_" + product.ImageFileExtension[i];
+                   string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, imageFolder);
+                   byte[] stringToByte = Convert.FromBase64String(product.ImageFileData[i]);
+                   await File.WriteAllBytesAsync(serverFolder, stringToByte);
+                   image = new Image
+                   {
+                       ProductID = product.ProductID,
+                       ImageName = imageFolder
+                   };
+                   _context.Add(image);
+               }
                 await _context.SaveChangesAsync();
-
                 return true;
             }
 
-
+            //Images sent from Views
             //if the input has value create a new image file
             if (product.ImageFile.Count > 0)
                 {

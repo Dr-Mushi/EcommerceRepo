@@ -49,11 +49,11 @@ namespace TestingEFRelations.Models
         public List<IFormFile> ImageFile { get; set; }
 
         [NotMapped]
-        public string ImageFileName { get; set; }
+        public List<string> ImageFileName { get; set; }
         [NotMapped]
-        public string ImageFileExtension { get; set; }
+        public List<string> ImageFileExtension { get; set; }
         [NotMapped]
-        public string ImageFileData { get; set; }
+        public List<string> ImageFileData { get; set; }
 
     }
 }
