@@ -1,0 +1,93 @@
+﻿@model TestingEFRelations.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="row">
+    <div class="col-4">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < Model.ProductImage.Count(); i++)
+                {
+                    <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@( i == 0 ? "active" : "")"></li>
+                }
+            </ol>
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.ProductImage.Count(); i++)
+                {
+                    <div class="@( i == 0 ? "carousel-item active" : "carousel-item")">
+                        <img class="d-block" src="/@Model.ProductImage[i].ImageName" alt="First slide" width="350" height="250">
+                    </div>
+
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row">
+            <div class="col-12 mb-1">
+                <div class="text-wrap bg-light border rounded ">
+                    @Html.DisplayFor(model => model.ProductName)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <textarea class="form-group col-12"
+                          disabled
+                          rows="8"
+                          cols="50"
+                          style="resize: none;">@Html.DisplayFor(model => model.ProductDescription)</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row m-2">
+    <div class="col-2 offset-4">
+        @Html.DisplayNameFor(model => model.ProductSize):
+        @Html.DisplayFor(model => model.ProductSize.SizeName)
+    </div>
+    @if (Model.ProductQuantity > 0)
+    {
+        <div class="col">
+            <p>Status: In Stock</p>
+        </div>
+    }
+    else
+    {
+        <div class="col">
+            <p>Status: Out of Stock</p>
+        </div>
+    }
+</div>
+<form asp-controller="Cart" asp-action="Create">
+    <div class="row m-2">
+        <div class="col-2 offset-4">
+            @Html.DisplayNameFor(model => model.ProductPrice):
+            @Html.DisplayFor(model => model.ProductPrice)$
+        </div>
+
+        <div class="col">
+            <input name="ProductID" type="hidden" value="@Model.ProductID" />
+            <input type="submit" value="Add to Cart" class="btn btn-success">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4 offset-4">
+            @Html.DisplayNameFor(model => model.ProductQuantity):
+            <input name="CartProductQuantity" type="number" max="@Model.ProductQuantity" min="1" value="1" />
+        </div>
+    </div>
+</form>
