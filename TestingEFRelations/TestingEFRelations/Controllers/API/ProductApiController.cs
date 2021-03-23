@@ -81,7 +81,7 @@ namespace TestingEFRelations.Controllers
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for
         //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutProduct(int id, [FromForm] [Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] ProductUpdateDto product)
+        public async Task<ActionResult> PutProduct(int id, [FromBody] /*[Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")] */ProductUpdateDto product)
         {
             var getProduct =await _product.FindProduct(id);
 
@@ -117,7 +117,7 @@ namespace TestingEFRelations.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> PatchProduct(int id, [FromForm][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")]JsonPatchDocument<ProductUpdateDto> patchDoc)
+        public async Task<ActionResult> PatchProduct(int id, [FromBody][Bind("ProductID,ProductName,ProductDescription,ImageFile,SizeID,ProductQuantity,ProductPrice")]JsonPatchDocument<ProductUpdateDto> patchDoc)
         {
             if (ModelState.IsValid)
             {
