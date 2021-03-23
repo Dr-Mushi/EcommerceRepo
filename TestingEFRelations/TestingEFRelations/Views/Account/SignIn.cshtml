@@ -1,0 +1,43 @@
+﻿@model TestingEFRelations.Models.SignIn
+
+@{
+    ViewData["Title"] = "SignIn";
+}
+
+<h1>SignIn</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Account" asp-action="SignIn">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EmailOrName" class="control-label"></label>
+                <input asp-for="EmailOrName" class="form-control" />
+                <span asp-validation-for="EmailOrName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RememberMe" class="control-label"></label>
+                <input asp-for="RememberMe" class="" />
+                <span asp-validation-for="RememberMe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sign In" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Account" asp-action="Signup">Register</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

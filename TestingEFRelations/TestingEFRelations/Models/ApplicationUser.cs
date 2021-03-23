@@ -14,6 +14,6 @@ namespace TestingEFRelations.Models
 
         public string UserLastName { get; set; }
 
-        public string UserPhN { get; set; }
+       // public string UserPhN { get; set; }
     }
 }

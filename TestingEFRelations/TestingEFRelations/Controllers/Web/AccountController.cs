@@ -37,7 +37,35 @@ namespace TestingEFRelations.Controllers
                 }
                 ModelState.Clear();
             }
+            return View(nameof(SignIn));
+        }
+
+        //[HttpGet("SignIn")]
+        public ActionResult SignIn()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SignIn(SignIn signIn)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountRepository.SignIn(signIn);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "product");
+                }
+                ModelState.AddModelError("", "Invalid Credintials");
+            }
+            
+            return View();
+        }
+
+        public async Task<ActionResult> SignOut()
+        {
+            await _accountRepository.SignOut();
+            return RedirectToAction("Index", "product");
         }
 
 

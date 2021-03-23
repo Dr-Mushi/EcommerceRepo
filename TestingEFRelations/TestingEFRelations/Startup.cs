@@ -30,8 +30,18 @@ namespace TestingEFRelations
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            //Identity Framework
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //Identity Framework Configurations
+            services.Configure<IdentityOptions>(options =>
+            {
+
+            });
+
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
