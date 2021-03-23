@@ -40,6 +40,10 @@ namespace TestingEFRelations
             {
 
             });
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = Configuration.GetValue<string>("LogInPath");
+            });
 
 
             services.AddControllersWithViews();

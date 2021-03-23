@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Models;
@@ -6,6 +7,7 @@ using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
+    [Authorize]
     public class WishlistController : Controller
     {
         private readonly IWishlistRepository _wishlist;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Models;
@@ -9,7 +10,7 @@ using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
-   
+   [Authorize]
     public class ProductController : Controller
     {
         private readonly IImageRepository _image;

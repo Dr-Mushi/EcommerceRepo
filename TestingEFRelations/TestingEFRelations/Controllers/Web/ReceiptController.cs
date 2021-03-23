@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestingEFRelations.Models;
 using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
+    [Authorize]
     public class ReceiptController : Controller
     {
         private readonly IReceiptRepository _receipt;

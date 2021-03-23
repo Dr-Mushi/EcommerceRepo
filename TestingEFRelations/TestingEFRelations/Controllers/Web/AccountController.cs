@@ -15,12 +15,14 @@ namespace TestingEFRelations.Controllers
             _accountRepository = accountRepository;
         }
         // GET: AccountController
+        [Route("Signup")]
+        [HttpGet]
         public ActionResult Signup()
         {
             return View();
         }
 
-
+        [Route("Signup")]
         [HttpPost]
         public async Task<ActionResult> Signup(SignUp signup)
         {
@@ -39,13 +41,13 @@ namespace TestingEFRelations.Controllers
             }
             return View(nameof(SignIn));
         }
-
-        //[HttpGet("SignIn")]
+        [Route("SignIn")]
+        [HttpGet]
         public ActionResult SignIn()
         {
             return View();
         }
-
+        [Route("SignIn")]
         [HttpPost]
         public async Task<ActionResult> SignIn(SignIn signIn)
         {
