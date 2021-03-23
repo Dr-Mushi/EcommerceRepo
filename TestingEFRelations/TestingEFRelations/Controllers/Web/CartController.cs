@@ -8,7 +8,8 @@ using TestingEFRelations.Repositories.Interface;
 namespace TestingEFRelations.Controllers
 
 {
-    [Authorize]
+    
+    [Authorize (Roles = "Admin")]
     public class CartController : Controller
     {
         private readonly IWishlistRepository _wishlist;
