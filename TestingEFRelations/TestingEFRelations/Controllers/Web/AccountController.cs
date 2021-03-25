@@ -64,11 +64,27 @@ namespace TestingEFRelations.Controllers
             return View();
         }
 
+        
         public async Task<ActionResult> SignOut()
         {
             await _accountRepository.SignOut();
             return RedirectToAction("Index", "product");
         }
+
+
+        [HttpGet]
+        public IActionResult Authorize(string name)
+        {
+            return View("SignIn");
+        }
+
+        [HttpGet]
+        public  IActionResult Token()
+        {
+            return View();
+        }
+
+
 
 
     }

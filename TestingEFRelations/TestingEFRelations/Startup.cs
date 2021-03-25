@@ -12,6 +12,11 @@ using TestingEFRelations.Repositories.Interface;
 using AutoMapper;
 using System;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TestingEFRelations
 {
@@ -40,9 +45,25 @@ namespace TestingEFRelations
             {
 
             });
+            //redirect unregistered users to login page or give 401 error for API
             services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = Configuration.GetValue<string>("LogInPath");
+                config.Events.OnRedirectToLogin = context =>
+                {
+                    if (context.Request.Path.StartsWithSegments("/api")
+                    )
+                    {
+                        context.Response.Clear();
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    }
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                };
+                //config.LoginPath = Configuration.GetValue<string>("LogInPath");
+                //config.LoginPath = "/api/ProductApi/AccessDenied";
+                
             });
 
 
@@ -73,6 +94,85 @@ namespace TestingEFRelations
 
             //Auto mapper for DTO
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //Map model to section in app settings
+            var jwt = Configuration.GetSection("JWT");
+            services.Configure<AppSettings>(jwt);
+
+            ////to validate the to
+            //var appSettings = jwt.Get<AppSettings>();
+            //var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            ////JWT 
+            //services.AddAuthentication(auth =>
+            //{
+            //    //because of this the authorization default will not go to line 51 and so... it will not direct the user to the login page.
+            //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            //})
+            //    .AddJwtBearer(jwt =>
+            //    {
+            //        jwt.RequireHttpsMetadata = false;
+            //        jwt.SaveToken = true;
+            //        jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            //        {
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey = new SymmetricSecurityKey(key),
+            //            ValidateIssuer = false,
+            //            ValidateAudience = false
+            //        };
+            //        //the API
+            //        //options.Audience = Configuration["AzureActiveDirectory:ResourceId"];
+            //        ////the one who gives the TOKENS on the API behalf which is Azure
+            //        //options.Authority = $"{Configuration["AzureActiveDirectory:InstanceId"]}{Configuration["AzureActiveDirectory:TenantId"]}";
+            //    });
+
+            //take the secret key 
+            var secretKey = Encoding.UTF8.GetBytes(Constants.Secret);
+            //give it a symmetric key
+            var key = new SymmetricSecurityKey(secretKey);
+
+            //JWT try number 2 WORKS!
+            services.AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(config =>
+            {
+                //this is where we will validate the token
+                config.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = Constants.Issuer,
+                    ValidAudience = Constants.Audiance,
+                    IssuerSigningKey = key,
+                    //make sure the default expire time is not set to more than zero, so that you can put custom EXP
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            ////Aouth
+            //services.AddAuthentication(config =>
+            //{
+            //    //check the cookie to see if the user logged in
+            //    config.DefaultAuthenticateScheme = "CleintCookie";
+
+            //    //deal out a cookie when the user sings up
+            //    config.DefaultSignInScheme = "CleintCookie";
+
+            //    //check if the user is allowed to do something
+            //    config.DefaultChallengeScheme = "OurServer";
+            //})
+            //    .AddCookie("CleintCookie")
+            //    .AddOAuth("OurServer",config=>
+            //    {
+            //        config.ClientId = "client_id";
+            //        config.ClientSecret = "client_secret";
+            //        config.CallbackPath = "/Account";
+            //        config.AuthorizationEndpoint = "https://localhost:44324/Account/Authorize";
+            //        config.TokenEndpoint = "https://localhost:44324/Account/Token";
+
+            //    });
+
 
 
             //Repositories

@@ -7,16 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestingEFRelations
+namespace jwt
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-
             CreateHostBuilder(args).Build().Run();
-
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

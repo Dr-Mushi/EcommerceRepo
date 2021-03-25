@@ -153,6 +153,43 @@ namespace TestingEFRelations.Controllers.Consume
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public void SignIn(SignIn signIn)
+        {
+            signIn.EmailOrName = "admin@hotmail.com";
+            signIn.Password = "Admin@12345";
+            signIn.RememberMe = false;
+            HttpClient client = _clientFactory.CreateClient("Ecommerce");
+            var json = JsonConvert.SerializeObject(signIn);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("https://localhost:44324/api/ProductApi/login"),
+
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            var response = client.SendAsync(request).ConfigureAwait(false);
+
+            var responseInfo = response.GetAwaiter().GetResult();
+        }
+        [HttpGet]
+        public  void SignOut()
+        {
+            HttpClient client = _clientFactory.CreateClient("Ecommerce");
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("https://localhost:44324/api/ProductApi/logout"),
+
+            };
+
+            var response = client.SendAsync(request).ConfigureAwait(false);
+
+            var responseInfo = response.GetAwaiter().GetResult();
+            //await client.GetFromJsonAsync<Product>($"ProductApi/LogOut");
+        }
     }
 }
 

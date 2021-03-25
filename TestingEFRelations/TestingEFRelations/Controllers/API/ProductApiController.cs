@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -20,17 +21,21 @@ namespace TestingEFRelations.Controllers
         private readonly IImageRepository _image;
         private readonly IProductRepository _product;
         private readonly IMapper _mapper;
+        private readonly IAccountRepository _accountRepository;
 
         public ProductApiController(IImageRepository image,
             IProductRepository product,
-            IMapper mapper)
+            IMapper mapper,
+            IAccountRepository accountRepo)
         {
             _image = image;
             _product = product;
             _mapper = mapper;
+            _accountRepository = accountRepo;
         }
 
         // GET: api/ProductApi
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductReadDto>>> GetAllProducts()
         {
@@ -162,6 +167,36 @@ namespace TestingEFRelations.Controllers
 
             }
             return NoContent();
+        }
+        [HttpGet("Login")]
+        public async Task<ActionResult> Login([FromBody]SignIn signIn)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountRepository.SignIn(signIn);
+                string token =  _accountRepository.AuthToken(result, signIn);
+                if (result.Succeeded)
+                {
+                    return Ok(new {access_token = token });
+                }
+               
+            }
+
+            return BadRequest();
+            
+        }
+
+        [HttpGet("LogOut")]
+        public async Task<ActionResult> LogOut()
+        {
+            if (ModelState.IsValid)
+            {
+                await _accountRepository.SignOut();
+               
+                return Ok(true);
+            }
+            return BadRequest();
+
         }
 
 

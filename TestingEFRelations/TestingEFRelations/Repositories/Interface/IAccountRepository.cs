@@ -10,5 +10,7 @@ namespace TestingEFRelations.Repositories
         Task<SignInResult> SignIn(SignIn signIn);
 
         Task SignOut();
+
+        string AuthToken(SignInResult result, SignIn signIn);
     }
 }
