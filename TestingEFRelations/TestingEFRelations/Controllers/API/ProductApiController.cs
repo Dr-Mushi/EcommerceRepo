@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -35,7 +36,7 @@ namespace TestingEFRelations.Controllers
         }
 
         // GET: api/ProductApi
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles ="Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductReadDto>>> GetAllProducts()
         {
@@ -173,12 +174,12 @@ namespace TestingEFRelations.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountRepository.SignIn(signIn);
-                string token =  _accountRepository.AuthToken(result, signIn);
-                if (result.Succeeded)
-                {
+                //var result = await _accountRepository.SignIn(signIn);
+                string token =  _accountRepository.AuthToken(/*result,*/ signIn);
+                //if (result.Succeeded)
+                //{
                     return Ok(new {access_token = token });
-                }
+                //}
                
             }
 

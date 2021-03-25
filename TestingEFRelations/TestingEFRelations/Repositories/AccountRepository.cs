@@ -64,7 +64,7 @@ namespace TestingEFRelations.Repositories
             await _signInManager.SignOutAsync();
         }
 
-        public string AuthToken(SignInResult result, SignIn signIn)
+        public string AuthToken(/*SignInResult result,*/ SignIn signIn)
         {
 
             //if (result.Succeeded)
@@ -94,12 +94,13 @@ namespace TestingEFRelations.Repositories
             //    var tokenWrite = tokenHandler.WriteToken(token);
             //}
 
-            if (result.Succeeded)
+            //if (result.Succeeded)
+            //{
+            //create a claim for the user
+            var claims = new[]
             {
-                //create a claim for the user
-                var claims = new[]
-                {
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, signIn.EmailOrName),
+                    new Claim("role","Admin"),
                     new Claim("SomeCookie","YayCookie")
                 };
 
@@ -125,7 +126,7 @@ namespace TestingEFRelations.Repositories
                 var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
 
                 return tokenJson;
-            }
+            //}
             return null;
         }
     }

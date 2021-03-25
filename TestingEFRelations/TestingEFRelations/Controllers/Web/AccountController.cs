@@ -64,7 +64,10 @@ namespace TestingEFRelations.Controllers
             return View();
         }
 
-        
+        public ActionResult AccessDenied()
+        {
+            return View("SignIn");
+        }
         public async Task<ActionResult> SignOut()
         {
             await _accountRepository.SignOut();

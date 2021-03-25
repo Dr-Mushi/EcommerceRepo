@@ -11,6 +11,6 @@ namespace TestingEFRelations.Repositories
 
         Task SignOut();
 
-        string AuthToken(SignInResult result, SignIn signIn);
+        string AuthToken(/*SignInResult result,*/ SignIn signIn);
     }
 }

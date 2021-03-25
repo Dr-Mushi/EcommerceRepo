@@ -135,8 +135,8 @@ namespace TestingEFRelations
             //JWT try number 2 WORKS!
             services.AddAuthentication(config =>
             {
-                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                //config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                //config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(config =>
             {
                 //this is where we will validate the token

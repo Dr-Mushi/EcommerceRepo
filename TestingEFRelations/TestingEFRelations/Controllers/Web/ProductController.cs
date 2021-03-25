@@ -10,7 +10,7 @@ using TestingEFRelations.Repositories.Interface;
 
 namespace TestingEFRelations.Controllers
 {
-   [Authorize]
+   [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IImageRepository _image;
