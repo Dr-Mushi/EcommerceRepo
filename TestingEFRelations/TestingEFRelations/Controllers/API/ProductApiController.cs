@@ -23,7 +23,7 @@ namespace TestingEFRelations.Controllers
         private readonly IImageRepository _image;
         private readonly IProductRepository _product;
         private readonly IMapper _mapper;
-        private readonly IAccountRepository _accountRepository;
+        //private readonly IAccountRepository _accountRepository;
 
         public ProductApiController(IImageRepository image,
             IProductRepository product,
@@ -33,7 +33,7 @@ namespace TestingEFRelations.Controllers
             _image = image;
             _product = product;
             _mapper = mapper;
-            _accountRepository = accountRepo;
+            //_accountRepository = accountRepo;
         }
 
         // GET: api/ProductApi
@@ -170,42 +170,42 @@ namespace TestingEFRelations.Controllers
             }
             return NoContent();
         }
-        [HttpGet("Login")]
-        public async Task<ActionResult> Login([FromBody]SignIn signIn)
-        {
-            if (ModelState.IsValid)
-            {
-                //var result = await _accountRepository.SignIn(signIn);
-                string token =  _accountRepository.AuthToken(/*result,*/ signIn);
+        //[HttpGet("Login")]
+        //public async Task<ActionResult> Login([FromBody]SignIn signIn)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //var result = await _accountRepository.SignIn(signIn);
+        //        string token =  _accountRepository.AuthToken(/*result,*/ signIn);
 
-                CookieOptions cs = new CookieOptions();
-                cs.Expires = DateTime.Now.AddHours(1);
-                Response.Cookies.Append("Token_AccessCookie", token, cs);
+        //        CookieOptions cs = new CookieOptions();
+        //        cs.Expires = DateTime.Now.AddHours(1);
+        //        Response.Cookies.Append("Token_AccessCookie", token, cs);
 
                 
-                //if (result.Succeeded)
-                //{
-                return Ok(new {access_token = token });
-                //}
+        //        //if (result.Succeeded)
+        //        //{
+        //        return Ok(new {access_token = token });
+        //        //}
                
-            }
+        //    }
 
-            return BadRequest();
+        //    return BadRequest();
             
-        }
+        //}
 
-        [HttpGet("LogOut")]
-        public async Task<ActionResult> LogOut()
-        {
-            if (ModelState.IsValid)
-            {
-                await _accountRepository.SignOut();
+        //[HttpGet("LogOut")]
+        //public async Task<ActionResult> LogOut()
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        await _accountRepository.SignOut();
                
-                return Ok(true);
-            }
-            return BadRequest();
+        //        return Ok(true);
+        //    }
+        //    return BadRequest();
 
-        }
+        //}
 
 
 
