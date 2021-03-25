@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -176,9 +177,15 @@ namespace TestingEFRelations.Controllers
             {
                 //var result = await _accountRepository.SignIn(signIn);
                 string token =  _accountRepository.AuthToken(/*result,*/ signIn);
+
+                CookieOptions cs = new CookieOptions();
+                cs.Expires = DateTime.Now.AddHours(1);
+                Response.Cookies.Append("Token_AccessCookie", token, cs);
+
+                
                 //if (result.Succeeded)
                 //{
-                    return Ok(new {access_token = token });
+                return Ok(new {access_token = token });
                 //}
                
             }

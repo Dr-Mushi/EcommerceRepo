@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestingEFRelations.Models;
@@ -32,6 +33,11 @@ namespace TestingEFRelations.Controllers
             //byte[] backToTestByte = Convert.FromBase64String(encodedData);
             //string backToTestStirng = Encoding.UTF8.GetString(backToTestByte);
 
+            //CookieOptions cs = new CookieOptions();
+            //cs.Expires = DateTime.Now.AddHours(1);
+            //Response.Cookies.Append("UserName", "Sultan tarabishi", cs);
+
+            //ViewBag.Message = Request.Cookies["userName"];
 
             return View(await _product.GetProductItems());
         }

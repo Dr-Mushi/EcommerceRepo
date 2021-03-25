@@ -95,48 +95,24 @@ namespace TestingEFRelations
             //Auto mapper for DTO
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            //Map model to section in app settings
+            //Map model to section in app settings NOT USED
             var jwt = Configuration.GetSection("JWT");
             services.Configure<AppSettings>(jwt);
 
-            ////to validate the to
-            //var appSettings = jwt.Get<AppSettings>();
-            //var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            ////JWT 
-            //services.AddAuthentication(auth =>
-            //{
-            //    //because of this the authorization default will not go to line 51 and so... it will not direct the user to the login page.
-            //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            //})
-            //    .AddJwtBearer(jwt =>
-            //    {
-            //        jwt.RequireHttpsMetadata = false;
-            //        jwt.SaveToken = true;
-            //        jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            //        {
-            //            ValidateIssuerSigningKey = true,
-            //            IssuerSigningKey = new SymmetricSecurityKey(key),
-            //            ValidateIssuer = false,
-            //            ValidateAudience = false
-            //        };
-            //        //the API
-            //        //options.Audience = Configuration["AzureActiveDirectory:ResourceId"];
-            //        ////the one who gives the TOKENS on the API behalf which is Azure
-            //        //options.Authority = $"{Configuration["AzureActiveDirectory:InstanceId"]}{Configuration["AzureActiveDirectory:TenantId"]}";
-            //    });
-
-            //take the secret key 
+            //JWT
+            //take the secret key
             var secretKey = Encoding.UTF8.GetBytes(Constants.Secret);
             //give it a symmetric key
             var key = new SymmetricSecurityKey(secretKey);
 
-            //JWT try number 2 WORKS!
             services.AddAuthentication(config =>
             {
+                //for default Autherization checking
                 //config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 //config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                //add JWT bearer 
             }).AddJwtBearer(config =>
             {
                 //this is where we will validate the token
@@ -148,30 +124,31 @@ namespace TestingEFRelations
                     //make sure the default expire time is not set to more than zero, so that you can put custom EXP
                     ClockSkew = TimeSpan.Zero
                 };
+
+                config.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["Token_AccessCookie"];
+                        return Task.CompletedTask;
+                    }
+                };
+
             });
 
-            ////Aouth
-            //services.AddAuthentication(config =>
-            //{
-            //    //check the cookie to see if the user logged in
-            //    config.DefaultAuthenticateScheme = "CleintCookie";
 
-            //    //deal out a cookie when the user sings up
-            //    config.DefaultSignInScheme = "CleintCookie";
+            // A distributed cache can improve the performance and scalability of an ASP.NET Core app 
+            //check https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-5.0
+            services.AddDistributedMemoryCache();
 
-            //    //check if the user is allowed to do something
-            //    config.DefaultChallengeScheme = "OurServer";
-            //})
-            //    .AddCookie("CleintCookie")
-            //    .AddOAuth("OurServer",config=>
-            //    {
-            //        config.ClientId = "client_id";
-            //        config.ClientSecret = "client_secret";
-            //        config.CallbackPath = "/Account";
-            //        config.AuthorizationEndpoint = "https://localhost:44324/Account/Authorize";
-            //        config.TokenEndpoint = "https://localhost:44324/Account/Token";
+            //
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.IsEssential = true;
+            });
 
-            //    });
 
 
 
@@ -207,6 +184,9 @@ namespace TestingEFRelations
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // automatically enable session state for the application.
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -220,3 +200,70 @@ namespace TestingEFRelations
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+////to validate the to
+//var appSettings = jwt.Get<AppSettings>();
+//var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+////JWT 
+//services.AddAuthentication(auth =>
+//{
+//    //because of this the authorization default will not go to line 51 and so... it will not direct the user to the login page.
+//    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+//})
+//    .AddJwtBearer(jwt =>
+//    {
+//        jwt.RequireHttpsMetadata = false;
+//        jwt.SaveToken = true;
+//        jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+//        {
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = new SymmetricSecurityKey(key),
+//            ValidateIssuer = false,
+//            ValidateAudience = false
+//        };
+//        //the API
+//        //options.Audience = Configuration["AzureActiveDirectory:ResourceId"];
+//        ////the one who gives the TOKENS on the API behalf which is Azure
+//        //options.Authority = $"{Configuration["AzureActiveDirectory:InstanceId"]}{Configuration["AzureActiveDirectory:TenantId"]}";
+//    });
+
+
+
+////Aouth
+//services.AddAuthentication(config =>
+//{
+//    //check the cookie to see if the user logged in
+//    config.DefaultAuthenticateScheme = "CleintCookie";
+
+//    //deal out a cookie when the user sings up
+//    config.DefaultSignInScheme = "CleintCookie";
+
+//    //check if the user is allowed to do something
+//    config.DefaultChallengeScheme = "OurServer";
+//})
+//    .AddCookie("CleintCookie")
+//    .AddOAuth("OurServer",config=>
+//    {
+//        config.ClientId = "client_id";
+//        config.ClientSecret = "client_secret";
+//        config.CallbackPath = "/Account";
+//        config.AuthorizationEndpoint = "https://localhost:44324/Account/Authorize";
+//        config.TokenEndpoint = "https://localhost:44324/Account/Token";
+
+//    });
+
+
