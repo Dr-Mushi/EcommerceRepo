@@ -16,6 +16,9 @@ namespace TestingEFRelations.Controllers
     {
         private readonly IImageRepository _image;
         private readonly IProductRepository _product;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+
 
         public ProductController(IImageRepository image,
             IProductRepository product)
@@ -38,6 +41,10 @@ namespace TestingEFRelations.Controllers
             //Response.Cookies.Append("UserName", "Sultan tarabishi", cs);
 
             //ViewBag.Message = Request.Cookies["userName"];
+            if (SearchTerm != null)
+            {
+                return View( _product.search(SearchTerm));
+            }         
 
             return View(await _product.GetProductItems());
         }
@@ -171,7 +178,13 @@ namespace TestingEFRelations.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //[HttpGet("Search")]
+        //public async Task<IActionResult> Search()
+        //{
 
+        //    var result = await _product.search(SearchTerm);
+        //    return View("index", result);
+        //}
     }
 }
 

@@ -20,8 +20,8 @@ namespace TestingEFRelations.Controllers.API
             _accountRepository = acountRepo;
         }
 
-        [HttpGet("Login")]
-        public async Task<ActionResult> Login([FromBody] SignIn signIn)
+        [HttpPost("SignIn")]
+        public async Task<ActionResult> SignIn([FromBody] SignIn signIn)
         {
             if (ModelState.IsValid)
             {
@@ -30,8 +30,10 @@ namespace TestingEFRelations.Controllers.API
 
                 CookieOptions cs = new CookieOptions();
                 cs.Expires = DateTime.Now.AddHours(1);
-                Response.Cookies.Append("Token_AccessCookie", token, cs);
-
+                 Response.Cookies.Append("Token_AccessCookie", token, cs);
+                
+                
+               
 
                 //if (result.Succeeded)
                 //{
@@ -45,7 +47,7 @@ namespace TestingEFRelations.Controllers.API
         }
 
         [HttpGet("LogOut")]
-        public async Task<ActionResult> LogOut()
+        public async Task<ActionResult> SignOut()
         {
             if (ModelState.IsValid)
             {

@@ -78,6 +78,12 @@ namespace TestingEFRelations.Repositories
             //_context.Update(product);
         }
 
+        public IEnumerable<Product> search(string SearchTerm) 
+        {
+       
+            return  _context.Product.Where(e => e.ProductName.Contains(SearchTerm));
+        }
+
 
 
 

@@ -23,5 +23,7 @@ namespace TestingEFRelations.Repositories.Interface
 
         public void ProductUpdate(Product product);
 
+        IEnumerable<Product> search(string SearchTerm = null);
+
     }
 }

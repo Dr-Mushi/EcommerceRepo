@@ -54,6 +54,8 @@ namespace TestingEFRelations.Models
         public List<string> ImageFileExtension { get; set; }
         [NotMapped]
         public List<string> ImageFileData { get; set; }
+        [NotMapped]
+        public string SearchTerm { get; set; }
 
     }
 }
